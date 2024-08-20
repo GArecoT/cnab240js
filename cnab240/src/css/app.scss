@@ -18,7 +18,7 @@
   color: #FDFDFD
 }
 .component-full {
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 40px);
 }
 .ronded-windows{
   border-radius: 5px
@@ -29,5 +29,22 @@
   padding: 0px 5px!important;
   padding-left: 5px!important;
   padding-right: 5px!important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.q-field--standard .q-field__control:before{
+  border-bottom: 1px solid rgba(0, 0, 0, 0.00)!important;
+}
+.q-field__native{
+  -webkit-appearance: none;
+  margin: 0;
+}
+.q-field__bottom{
+  min-height: 15px;
+  padding: 5px 12px 0;
+}
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
