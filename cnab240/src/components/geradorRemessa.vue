@@ -1,6 +1,6 @@
 <template>
   <q-card flat square>
-    <q-form @submit="headerDeArquivo(remessa)">
+    <q-form @submit="async () => (header = await headerDeArquivo(remessa))">
       <q-card-section
         class="q-px-xs row content-between items-between component-full"
       >
@@ -36,7 +36,7 @@
             ]"
           >
             <template v-slot:counter>
-              <span>{{ calcula_texto(remessa.num_agencia, 5) }}</span>
+              <span>{{ calcula_texto(remessa.num_agencia, 7) }}</span>
             </template>
           </q-input>
           <q-input
@@ -145,6 +145,10 @@
               <span>{{ calcula_texto(remessa.nome_empresa, 30) }}</span>
             </template>
           </q-input>
+          <div class="col-12">
+            <p>HEADER</p>
+            <pre>{{ header }}</pre>
+          </div>
         </div>
         <div class="flex justify-end col-12">
           <q-btn
@@ -165,14 +169,15 @@ import bancos from "src/tipos/bancos";
 import inscricaoEmpresa from "src/tipos/inscricaoEmpresa";
 import headerDeArquivo from "src/geradores/headerDeArquivo";
 import { onMounted, ref } from "vue";
-import { geraHora } from "src/geradores/utils";
 
+const header = ref("");
 const remessa = ref({
   num_agencia: "",
   num_convenio: "",
   num_conta: "",
   num_doc: "",
   nome_empresa: "",
+  cdg_verificador_conta: " ",
   num_lote: "0000",
   num_sequencial: "000000",
 });
@@ -180,9 +185,7 @@ const remessa = ref({
 function calcula_texto(texto, max) {
   return texto.length + "/" + max;
 }
-onMounted(() => {
-  geraHora();
-});
+onMounted(() => {});
 </script>
 <style lang="scss">
 .q-field__native {
