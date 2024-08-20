@@ -1,1 +1,10 @@
 // app global css in SCSS form
+.bg-light{
+  background: #FEFDFF
+}
+.text-light{
+  color: #FEFDFF
+}
+.component-full {
+  min-height: calc(100vh - 80px);
+}
