@@ -1,10 +1,33 @@
 // app global css in SCSS form
+.bg-soft-grey{
+  background: #F2F2F2
+}
+.text-soft-grey{
+  color: #F2F2F2
+}
 .bg-light{
-  background: #FEFDFF
+  background: #F1F5F9
 }
 .text-light{
-  color: #FEFDFF
+  color: #F1F5F9
+}
+.bg-lighter{
+  background: #FDFDFD
+}
+.text-lighter{
+  color: #FDFDFD
 }
 .component-full {
   min-height: calc(100vh - 80px);
+}
+.ronded-windows{
+  border-radius: 5px
+}
+.q-field__control{
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 5px;
+  padding: 0px 5px!important;
+  padding-left: 5px!important;
+  padding-right: 5px!important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }

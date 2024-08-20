@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-none">
     <q-layout view="lHh lpr lFf" container class="pagina-full">
-      <q-header elevated>
+      <q-header class="bg-soft-grey text-dark">
         <div class="q-pa-sm q-pl-md row items-center">
           <div class="cursor-pointer non-selectable">
             Gerador
