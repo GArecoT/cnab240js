@@ -8,7 +8,7 @@
           <div class="titulo">Dados bancários</div>
           <div class="row col-12 bg-lighter card-1">
             <q-select
-              :options="bancos"
+              :options="lista_bancos"
               color="primary"
               dense
               label="Banco"
@@ -20,6 +20,14 @@
               options-dense
               v-model="remessa.cdg_banco"
               :rules="[(val) => !!val || 'Obrigatório']"
+              use-input
+              fill-input
+              hide-selected
+              @filter="
+                async (val, update) => {
+                  lista_bancos = filtrar(val, update, bancos, 'name');
+                }
+              "
             />
             <q-input
               dense
@@ -94,7 +102,7 @@
             v-model="remessa.num_conta"
           / -->
             <q-select
-              :options="inscricaoEmpresa"
+              :options="listaInscricaoEmpresa"
               color="primary"
               dense
               label="Tipo Doc"
@@ -103,9 +111,22 @@
               option-value="cdg"
               emit-value
               map-options
+              use-input
+              fill-input
+              hide-selected
               options-dense
               v-model="remessa.cdg_documento"
               :rules="[(val) => !!val || 'Obrigatório']"
+              @filter="
+                async (val, update) => {
+                  listaInscricaoEmpresa = filtrar(
+                    val,
+                    update,
+                    inscricaoEmpresa,
+                    'name'
+                  );
+                }
+              "
             />
             <q-input
               color="primary"
@@ -148,7 +169,7 @@
               </template>
             </q-input>
             <q-select
-              :options="operacao"
+              :options="listaOperacao"
               color="primary"
               dense
               label="Tipo de Operação"
@@ -160,9 +181,17 @@
               options-dense
               v-model="remessa.cdg_operacao"
               :rules="[(val) => !!val || 'Obrigatório']"
+              use-input
+              fill-input
+              hide-selected
+              @filter="
+                async (val, update) => {
+                  listaOperacao = filtrar(val, update, operacao, 'name');
+                }
+              "
             />
             <q-select
-              :options="servicos"
+              :options="lista_servicos"
               color="primary"
               dense
               label="Tipo de Serviço"
@@ -174,9 +203,17 @@
               options-dense
               v-model="remessa.cdg_servico"
               :rules="[(val) => !!val || 'Obrigatório']"
+              use-input
+              fill-input
+              hide-selected
+              @filter="
+                async (val, update) => {
+                  lista_servicos = filtrar(val, update, servicos, 'name');
+                }
+              "
             />
             <q-select
-              :options="formaLancamento"
+              :options="lista_forma_lancamento"
               color="primary"
               dense
               label="Forma de lançamento"
@@ -188,6 +225,19 @@
               options-dense
               v-model="remessa.cdg_lancamento"
               :rules="[(val) => !!val || 'Obrigatório']"
+              use-input
+              fill-input
+              hide-selected
+              @filter="
+                async (val, update) => {
+                  lista_forma_lancamento = filtrar(
+                    val,
+                    update,
+                    formaLancamento,
+                    'name'
+                  );
+                }
+              "
             />
           </div>
           <div>
@@ -270,7 +320,7 @@
                 </template>
               </q-input>
               <q-select
-                :options="estados"
+                :options="lista_estados"
                 color="primary"
                 dense
                 label="Estado"
@@ -326,8 +376,15 @@ import bancos from "src/tipos/bancos";
 import operacao from "src/tipos/operacao";
 import inscricaoEmpresa from "src/tipos/inscricaoEmpresa";
 import headerDeArquivo from "src/geradores/headerDeArquivo";
+import { filtrar } from "src/utils/diversos";
 import { onMounted, ref } from "vue";
 
+const lista_bancos = ref(bancos);
+const lista_servicos = ref(servicos);
+const lista_estados = ref(estados);
+const lista_forma_lancamento = ref(formaLancamento);
+const listaOperacao = ref(operacao);
+const listaInscricaoEmpresa = ref(inscricaoEmpresa);
 const header = ref("");
 const remessa = ref({
   num_agencia: "",
