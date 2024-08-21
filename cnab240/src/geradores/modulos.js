@@ -5,6 +5,10 @@ export function geraControle(objeto) {
 
   return `${objeto_temp.cdg_banco}${objeto_temp.num_lote}${objeto_temp.cdg_registro}`;
 }
+export function geraServico() {
+}
+export function geraEnderecoEmpresa() {
+}
 export function geraEmpresa(objeto) {
   const objeto_temp = structuredClone(objeto);
   //Trata valores que precisam de espaço

@@ -1,5 +1,5 @@
 <template>
-  <geradorRemessa class="component-full" />
+  <geradorRemessa class="component-full bg-soft-grey" />
 </template>
 
 <script setup>

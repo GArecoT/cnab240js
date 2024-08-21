@@ -19,8 +19,8 @@
         </div>
       </q-header>
 
-      <q-page-container>
-        <router-view />
+      <q-page-container class="bg-soft-grey">
+        <router-view class="bg-soft-grey" />
       </q-page-container>
     </q-layout>
   </div>
