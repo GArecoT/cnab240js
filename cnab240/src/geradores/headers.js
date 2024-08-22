@@ -1,8 +1,13 @@
 import bancos from "src/tipos/bancos";
 import { geraData, geraHora, preencheEspaco } from "./utils";
-import { geraArquivo, geraControle, geraEmpresa } from "./modulos";
+import {
+  geraArquivo,
+  geraControle,
+  geraEmpresa,
+  geraEnderecoEmpresa,
+} from "./modulos";
 
-export default async function (
+export function geraHeaderArquivo(
   objeto,
 ) {
   const objeto_temp = structuredClone(objeto);
@@ -35,4 +40,10 @@ export default async function (
   console.log(objeto_temp);
 
   return header;
+}
+
+export function geraHeaderLote(objeto) {
+  const lote = geraEnderecoEmpresa(objeto);
+
+  console.log(lote);
 }

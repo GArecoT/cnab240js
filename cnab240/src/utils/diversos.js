@@ -17,3 +17,6 @@ export function filtrar(val, update, store, nome) {
   });
   return lista;
 }
+export function calcula_texto(texto, max) {
+  return texto.length + "/" + max;
+}
