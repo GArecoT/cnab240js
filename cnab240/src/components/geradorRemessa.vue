@@ -138,10 +138,14 @@
               reverse-fill-mask
               v-model="remessa.num_doc"
               bottom-slots
-              :rules="[
-                (val) => val.length <= 14 || '',
-                (val) => !!val || 'Obrigatório',
-              ]"
+              :rules="
+                remessa.cdg_documento != '0'
+                  ? [
+                      (val) => val.length <= 14 || '',
+                      (val) => !!val || 'Obrigatório',
+                    ]
+                  : []
+              "
             >
               <template v-slot:counter>
                 <span>{{ calcula_texto(remessa.num_doc, 14) }}</span>

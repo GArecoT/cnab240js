@@ -1,10 +1,11 @@
 import bancos from "src/tipos/bancos";
-import { geraData, geraHora, preencheEspaco } from "./utils";
+import { geraData, geraHora, preencheEspaco, preencheZero } from "./utils";
 import {
   geraArquivo,
   geraControle,
   geraEmpresa,
   geraEnderecoEmpresa,
+  geraServico,
 } from "./modulos";
 
 export function geraHeaderArquivo(
@@ -43,7 +44,17 @@ export function geraHeaderArquivo(
 }
 
 export function geraHeaderLote(objeto) {
-  const lote = geraEnderecoEmpresa(objeto);
+  const objeto_temp = structuredClone(objeto);
 
+  objeto_temp.indicativo_forma_pagamento =
+    bancos.filter((obj) => obj.cdg == objeto_temp.cdg_banco)[0]
+      .indicativo_forma_pagamento;
+
+  const lote = `${geraControle(objeto_temp)}${geraServico(objeto_temp)}${preencheEspaco("", 1)
+    }${geraEmpresa(objeto_temp)}${preencheEspaco("", 40) /*Mensagem 1. Mudar futuramente*/
+    }${geraEnderecoEmpresa(objeto_temp)
+    }${objeto_temp.indicativo_forma_pagamento}${preencheEspaco("", 6)}${preencheEspaco("", 10) /*Ocorrencias. mudar futuramente*/
+    }`;
+  console.log(objeto_temp);
   console.log(lote);
 }

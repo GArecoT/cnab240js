@@ -6,6 +6,12 @@ export function geraControle(objeto) {
   return `${objeto_temp.cdg_banco}${objeto_temp.num_lote}${objeto_temp.cdg_registro}`;
 }
 export function geraServico(objeto) {
+  const objeto_temp = structuredClone(objeto);
+
+  objeto_temp.layout_lote =
+    bancos.filter((obj) => obj.cdg == objeto_temp.cdg_banco)[0].layout_lote;
+
+  return `${objeto_temp.cdg_operacao}${objeto_temp.cdg_servico}${objeto_temp.cdg_lancamento}${objeto_temp.layout_lote}`;
 }
 export function geraEnderecoEmpresa(objeto) {
   const objeto_temp = structuredClone(objeto);

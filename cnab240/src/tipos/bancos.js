@@ -6,4 +6,6 @@ export default [{
   versao_layout: "089",
   reservado_banco: "",
   reservado_empresa: "",
+  layout_lote: "045",
+  indicativo_forma_pagamento: "01",
 }];
