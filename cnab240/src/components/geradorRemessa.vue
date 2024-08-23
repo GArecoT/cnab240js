@@ -143,7 +143,6 @@
                   ? '###.#####.##-#'
                   : '##############'
               "
-              reverse-fill-mask
               unmasked-value
               v-model="remessa.num_doc"
               bottom-slots
@@ -482,6 +481,88 @@
                   <span>{{ calcula_texto(remessa.nome_favorecido, 30) }}</span>
                 </template>
               </q-input>
+              <q-input
+                color="primary"
+                input-class="text-black"
+                dense
+                label="Num. Documento"
+                class="col-sm-4 q-px-xs"
+                v-model="remessa.num_doc_pagamento"
+                bottom-slots
+                :rules="[
+                  (val) => val.length <= 20 || '',
+                  (val) => !!val || 'Obrigatório',
+                ]"
+              >
+                <template v-slot:counter>
+                  <span>{{
+                    calcula_texto(remessa.num_doc_pagamento, 20)
+                  }}</span>
+                </template>
+              </q-input>
+              <q-input
+                color="primary"
+                input-class="text-black"
+                dense
+                mask="##/##/####"
+                unmasked-value
+                label="Data Pagamento"
+                class="col-sm-2 q-px-xs"
+                v-model="remessa.data_pagamento"
+                bottom-slots
+                :rules="[
+                  (val) => val.length <= 8 || '',
+                  (val) => val.length > 7 || '',
+                  (val) => !!val || 'Obrigatório',
+                ]"
+              >
+                <template v-slot:counter>
+                  <span>{{ calcula_texto(remessa.data_pagamento, 8) }}</span>
+                </template>
+              </q-input>
+              <q-select
+                :options="lista_moedas"
+                color="primary"
+                dense
+                label="Moeda"
+                class="col-sm-3 q-px-xs bg-white"
+                option-label="name"
+                option-value="cdg"
+                emit-value
+                map-options
+                options-dense
+                v-model="remessa.cdg_moeda"
+                :rules="[(val) => !!val || 'Obrigatório']"
+                use-input
+                fill-input
+                hide-selected
+                @filter="
+                  async (val, update) => {
+                    lista_moedas = filtrar(val, update, moedas, 'name');
+                  }
+                "
+              />
+              <q-input
+                color="primary"
+                input-class="text-black"
+                dense
+                mask="###.###.###.###,##"
+                reverse-fill-mask
+                prefix="R$"
+                unmasked-value
+                label="Valor do Pagamento"
+                class="col-sm-2 q-px-xs"
+                v-model="remessa.valor_pagamento"
+                bottom-slots
+                :rules="[
+                  (val) => val.length <= 13 || '',
+                  (val) => !!val || 'Obrigatório',
+                ]"
+              >
+                <template v-slot:counter>
+                  <span>{{ calcula_texto(remessa.valor_pagamento, 13) }}</span>
+                </template>
+              </q-input>
             </div>
           </div>
           <div class="col-12">
@@ -489,6 +570,9 @@
             <pre>{{ header }}</pre>
           </div>
         </div>
+        <!-- Data real manda tudo zero (provisório) -->
+        <!-- Nosso número em branco (provisório) -->
+        <!-- codigo de finalidade doc branco (provisório) -->
 
         <div class="flex justify-end col-12">
           <q-btn
@@ -509,6 +593,7 @@ import servicos from "src/tipos/servicos";
 import { estados } from "src/tipos/cidades_estados";
 import formaLancamento from "src/tipos/formaLancamento";
 import bancos from "src/tipos/bancos.json";
+import moedas from "src/tipos/moedas.json";
 import operacao from "src/tipos/operacao";
 import inscricaoEmpresa from "src/tipos/inscricaoEmpresa";
 import { geraHeaderArquivo, geraHeaderLote } from "src/geradores/headers";
@@ -520,6 +605,7 @@ import camaraCentraliza from "src/tipos/camaraCentraliza";
 console.log(bancos);
 const lista_bancos = ref(bancos);
 const lista_servicos = ref(servicos);
+const lista_moedas = ref(moedas);
 const lista_estados = ref(estados);
 const lista_camaras = ref(camaraCentraliza);
 const lista_forma_lancamento = ref(formaLancamento);
@@ -545,6 +631,9 @@ const remessa = ref({
   num_conta_favorecido: "",
   cdg_banco_favorecido: "",
   nome_favorecido: "",
+  num_doc_pagamento: "",
+  data_pagamento: "",
+  valor_pagamento: "",
 });
 
 function geraRemessa() {
