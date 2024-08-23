@@ -366,6 +366,36 @@
                 </template>
               </q-input>
             </div>
+            <div class="titulo">Favorecido</div>
+            <div class="row col-12 bg-lighter card-1">
+              <q-select
+                :options="lista_camaras"
+                color="primary"
+                dense
+                label="Câmara"
+                class="col-sm-3 q-px-xs bg-white"
+                option-label="name"
+                option-value="cdg"
+                emit-value
+                map-options
+                options-dense
+                v-model="remessa.cdg_camara"
+                :rules="[(val) => !!val || 'Obrigatório']"
+                use-input
+                fill-input
+                hide-selected
+                @filter="
+                  async (val, update) => {
+                    lista_camaras = filtrar(
+                      val,
+                      update,
+                      camaraCentraliza,
+                      'name'
+                    );
+                  }
+                "
+              />
+            </div>
           </div>
           <div class="col-12">
             <p class="titulo">HEADER</p>
@@ -391,17 +421,20 @@
 import servicos from "src/tipos/servicos";
 import { estados } from "src/tipos/cidades_estados";
 import formaLancamento from "src/tipos/formaLancamento";
-import bancos from "src/tipos/bancos";
+import bancos from "src/tipos/bancos.json";
 import operacao from "src/tipos/operacao";
 import inscricaoEmpresa from "src/tipos/inscricaoEmpresa";
 import { geraHeaderArquivo, geraHeaderLote } from "src/geradores/headers";
 import { filtrar, calcula_texto, debounce } from "src/utils/diversos";
 import { onMounted, ref } from "vue";
 import { viaCEP } from "src/boot/axios";
+import camaraCentraliza from "src/tipos/camaraCentraliza";
 
+console.log(bancos);
 const lista_bancos = ref(bancos);
 const lista_servicos = ref(servicos);
 const lista_estados = ref(estados);
+const lista_camaras = ref(camaraCentraliza);
 const lista_forma_lancamento = ref(formaLancamento);
 const listaOperacao = ref(operacao);
 const listaInscricaoEmpresa = ref(inscricaoEmpresa);
