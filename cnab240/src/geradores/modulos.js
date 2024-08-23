@@ -1,5 +1,6 @@
 import bancos from "src/tipos/bancos";
 import { geraData, geraHora, preencheEspaco, preencheZero } from "./utils";
+
 export function geraControle(objeto) {
   const objeto_temp = structuredClone(objeto);
 
@@ -13,6 +14,7 @@ export function geraServico(objeto) {
 
   return `${objeto_temp.cdg_operacao}${objeto_temp.cdg_servico}${objeto_temp.cdg_lancamento}${objeto_temp.layout_lote}`;
 }
+
 export function geraEnderecoEmpresa(objeto) {
   const objeto_temp = structuredClone(objeto);
 
@@ -26,6 +28,7 @@ export function geraEnderecoEmpresa(objeto) {
 
   return `${objeto_temp.logradouro}${objeto_temp.endereco_num}${objeto_temp.complemento}${objeto_temp.cidade}${objeto_temp.cep}${objeto_temp.estado}`;
 }
+
 export function geraEmpresa(objeto) {
   const objeto_temp = structuredClone(objeto);
   //Trata valores que precisam de espaço

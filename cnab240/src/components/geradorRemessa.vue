@@ -134,10 +134,20 @@
               dense
               label="Número do Documento"
               class="col-sm-4 q-px-xs"
-              mask="##############"
+              :mask="
+                remessa.cdg_documento == 1
+                  ? '###.###.###-##'
+                  : remessa.cdg_documento == 2
+                  ? '##.###.###/####-##'
+                  : remessa.cdg_documento == 3
+                  ? '###.#####.##-#'
+                  : '##############'
+              "
               reverse-fill-mask
+              unmasked-value
               v-model="remessa.num_doc"
               bottom-slots
+              :disable="remessa.cdg_documento == 0"
               :rules="
                 remessa.cdg_documento != '0'
                   ? [
