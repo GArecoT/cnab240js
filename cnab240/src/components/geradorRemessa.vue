@@ -257,6 +257,8 @@
                 unmasked-value
                 bottom-slots
                 v-model="remessa.cep"
+                debounce="500"
+                @update:model-value="pegaEndereco(remessa.cep)"
                 :rules="[
                   (val) => val.length <= 8 || '',
                   (val) => val.length > 7 || '',
@@ -265,6 +267,9 @@
               >
                 <template v-slot:counter>
                   <span>{{ calcula_texto(remessa.cep, 8) }}</span>
+                </template>
+                <template v-slot:append>
+                  <q-spinner-hourglass v-if="showLoading" size="sm" />
                 </template>
               </q-input>
               <q-input
@@ -380,8 +385,9 @@ import bancos from "src/tipos/bancos";
 import operacao from "src/tipos/operacao";
 import inscricaoEmpresa from "src/tipos/inscricaoEmpresa";
 import { geraHeaderArquivo, geraHeaderLote } from "src/geradores/headers";
-import { filtrar, calcula_texto } from "src/utils/diversos";
+import { filtrar, calcula_texto, debounce } from "src/utils/diversos";
 import { onMounted, ref } from "vue";
+import { viaCEP } from "src/boot/axios";
 
 const lista_bancos = ref(bancos);
 const lista_servicos = ref(servicos);
@@ -390,6 +396,7 @@ const lista_forma_lancamento = ref(formaLancamento);
 const listaOperacao = ref(operacao);
 const listaInscricaoEmpresa = ref(inscricaoEmpresa);
 const header = ref("");
+const showLoading = ref(false);
 const remessa = ref({
   num_agencia: "",
   num_convenio: "",
@@ -409,6 +416,18 @@ const remessa = ref({
 function geraRemessa() {
   geraHeaderArquivo(remessa.value);
   geraHeaderLote(remessa.value);
+}
+async function pegaEndereco(cep) {
+  if (cep.length > 7) {
+    showLoading.value = true;
+    const response = await viaCEP.get("/ws/" + cep + "/json/");
+    showLoading.value = false;
+    if (response.data) {
+      remessa.value.logradouro = response.data.logradouro.toUpperCase();
+      remessa.value.estado = response.data.uf.toUpperCase();
+      remessa.value.cidade = response.data.localidade.toUpperCase();
+    }
+  }
 }
 
 onMounted(() => {});

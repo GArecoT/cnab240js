@@ -20,3 +20,14 @@ export function filtrar(val, update, store, nome) {
 export function calcula_texto(texto, max) {
   return texto.length + "/" + max;
 }
+export function debounce(func, delay) {
+  let timeout = null;
+  return (...args) => {
+    if (timeout) clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      func(...args);
+      timeout = null;
+    }, delay);
+  };
+}
