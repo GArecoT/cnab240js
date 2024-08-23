@@ -379,7 +379,7 @@
                 emit-value
                 map-options
                 options-dense
-                v-model="remessa.cdg_camara"
+                v-model="remessa.cdg_camara_favorecido"
                 :rules="[(val) => !!val || 'Obrigatório']"
                 use-input
                 fill-input
@@ -395,6 +395,93 @@
                   }
                 "
               />
+              <q-select
+                :options="lista_bancos"
+                color="primary"
+                dense
+                label="Banco"
+                class="col-sm-3 q-px-xs bg-white"
+                option-label="name"
+                option-value="cdg"
+                emit-value
+                map-options
+                options-dense
+                v-model="remessa.cdg_banco_favorecido"
+                :rules="[(val) => !!val || 'Obrigatório']"
+                use-input
+                fill-input
+                hide-selected
+                @filter="
+                  async (val, update) => {
+                    lista_bancos = filtrar(val, update, bancos, 'name');
+                  }
+                "
+              />
+              <q-input
+                dense
+                color="primary"
+                input-class="text-black"
+                label="Número Agência"
+                class="col-sm-2 q-px-xs"
+                mask="#####-#"
+                reverse-fill-mask
+                unmasked-value
+                bottom-slots
+                v-model="remessa.num_agencia_favorecido"
+                :rules="[
+                  (val) => val.length <= 6 || '',
+                  (val) => !!val || 'Obrigatório',
+                ]"
+              >
+                <template v-slot:counter>
+                  <span>{{
+                    calcula_texto(remessa.num_agencia_favorecido, 6)
+                  }}</span>
+                </template>
+              </q-input>
+              <q-input
+                color="primary"
+                input-class="text-black"
+                dense
+                label="Número da Conta"
+                class="col-sm-4 q-px-xs"
+                mask="############-#"
+                reverse-fill-mask
+                unmasked-value
+                v-model="remessa.num_conta_favorecido"
+                bottom-slots
+                :rules="[
+                  (val) => val.length <= 13 || '',
+                  (val) => !!val || 'Obrigatório',
+                ]"
+              >
+                <template v-slot:counter>
+                  <span>{{
+                    calcula_texto(remessa.num_conta_favorecido, 13)
+                  }}</span>
+                </template>
+              </q-input>
+              <q-input
+                color="primary"
+                input-class="text-black"
+                dense
+                label="Nome do favorecido"
+                class="col-sm-6 q-px-xs"
+                v-model="remessa.nome_favorecido"
+                @update:model-value="
+                  remessa.nome_favorecido =
+                    remessa.nome_favorecido.toUpperCase()
+                "
+                bottom-slots
+                :rules="[
+                  (val) => val.length <= 30 || '',
+                  (val) => !!val || 'Obrigatório',
+                ]"
+              >
+                <template v-slot:counter>
+                  <span>{{ calcula_texto(remessa.nome_favorecido, 30) }}</span>
+                </template>
+              </q-input>
             </div>
           </div>
           <div class="col-12">
@@ -454,6 +541,10 @@ const remessa = ref({
   cep: "",
   complemento: "",
   cidade: "",
+  num_agencia_favorecido: "",
+  num_conta_favorecido: "",
+  cdg_banco_favorecido: "",
+  nome_favorecido: "",
 });
 
 function geraRemessa() {

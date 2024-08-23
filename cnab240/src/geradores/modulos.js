@@ -42,16 +42,31 @@ export function geraEmpresa(objeto) {
 
   //Separar código verificador agência e conta
 
-  return `${objeto_temp.cdg_documento}${objeto_temp.num_doc}${objeto_temp.num_convenio}${geraContaCorrente(objeto_temp)}${objeto_temp.nome_empresa}`;
+  return `${objeto_temp.cdg_documento}${objeto_temp.num_doc}${objeto_temp.num_convenio}${
+    geraContaCorrente(objeto_temp)
+  }${objeto_temp.nome_empresa}`;
 }
 
-export function geraContaCorrente(objeto){
+export function geraFavorecido(objeto) {
+  const objeto_temp = structuredClone(objeto);
+
+  objeto_temp.nome_favorecido = preencheEspaco(objeto_temp.nome_favorecido);
+
+  return `${objeto_temp.cdg_camara_favorecido}${objeto_temp.cdg_banco_favorecido}${
+    geraContaCorrente({
+      num_agencia: objeto_temp.num_agencia_favorecido,
+      num_conta: objeto_temp.num_conta_favorecido,
+    })
+  }${objeto_temp.nome_favorecido}`;
+}
+
+export function geraContaCorrente(objeto) {
   const objeto_temp = structuredClone(objeto);
 
   objeto_temp.num_agencia = preencheZero(objeto_temp.num_agencia, 6);
   objeto_temp.num_conta = preencheZero(objeto_temp.num_conta, 13);
 
-  return `${objeto_temp.num_agencia}${objeto_temp.num_conta}${objeto_temp.cdg_verificador_conta}`
+  return `${objeto_temp.num_agencia}${objeto_temp.num_conta}${objeto_temp.cdg_verificador_conta}`;
 }
 
 export function geraArquivo(objeto) {
