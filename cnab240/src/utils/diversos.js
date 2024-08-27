@@ -31,3 +31,9 @@ export function debounce(func, delay) {
     }, delay);
   };
 }
+export function exportarTXT(obj) {
+  const blob = new Blob([obj], {
+    type: "text/plain",
+  });
+  return URL.createObjectURL(blob);
+}

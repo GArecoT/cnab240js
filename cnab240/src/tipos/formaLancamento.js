@@ -33,6 +33,8 @@ export default [
   { cdg: "72", name: "Depósito Judicial em Poupança" },
   { cdg: "73", name: "Extrato de Conta Investimento" },
   { cdg: "99", name: "Cadastro de favorecidos" }, // (4)
+  { cdg: "45", name: "Pix Transferência" },
+  { cdg: "47", name: "Pix QR- CODE" },
 ];
 
 // WARNING: Ler essa budega eventualmente

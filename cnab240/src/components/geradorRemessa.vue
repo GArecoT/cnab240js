@@ -250,6 +250,14 @@
                   );
                 }
               "
+              @update:model-value="
+                if (
+                  remessa.cdg_lancamento == '47' ||
+                  remessa.cdg_lancamento == '45'
+                ) {
+                  remessa.cdg_camara_favorecido = '009';
+                }
+              "
             />
           </div>
           <div>
@@ -597,7 +605,12 @@ import moedas from "src/tipos/moedas.json";
 import operacao from "src/tipos/operacao";
 import inscricaoEmpresa from "src/tipos/inscricaoEmpresa";
 import { geraHeaderArquivo, geraHeaderLote } from "src/geradores/headers";
-import { filtrar, calcula_texto, debounce } from "src/utils/diversos";
+import {
+  filtrar,
+  calcula_texto,
+  debounce,
+  exportarTXT,
+} from "src/utils/diversos";
 import { onMounted, ref } from "vue";
 import { viaCEP } from "src/boot/axios";
 import camaraCentraliza from "src/tipos/camaraCentraliza";
@@ -636,9 +649,11 @@ const remessa = ref({
   valor_pagamento: "",
 });
 
-function geraRemessa() {
-  geraHeaderArquivo(remessa.value);
-  geraHeaderLote(remessa.value);
+async function geraRemessa() {
+  const headerLote = await geraHeaderLote(remessa.value);
+  const headerArquivo = await geraHeaderArquivo(remessa.value);
+  console.log(headerLote);
+  window.open(exportarTXT(headerArquivo + "\n" + headerLote));
 }
 async function pegaEndereco(cep) {
   if (cep.length > 7) {

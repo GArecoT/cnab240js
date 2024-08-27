@@ -30,15 +30,13 @@ export function geraHeaderArquivo(
     20,
   );
 
-  const header = `${geraControle({ ...objeto_temp, cdg_registro: 0 })}${
-    preencheEspaco("", 9)
-  }${geraEmpresa(objeto_temp)}${objeto_temp.nome_banco}${
-    preencheEspaco("", 10)
-  }${
-    geraArquivo({ ...objeto_temp, cdg_remessa_retorno: 1 })
-  }${objeto_temp.reservado_banco}${objeto_temp.reservado_empresa}${
-    preencheEspaco("", 29)
-  }`;
+  const header = `${geraControle({ ...objeto_temp, cdg_registro: 0 })}${preencheEspaco("", 9)
+    }${geraEmpresa(objeto_temp)}${objeto_temp.nome_banco}${preencheEspaco("", 10)
+    }${geraArquivo({ ...objeto_temp, cdg_remessa_retorno: 1 })}${objeto_temp.cdg_lancamento == "45" || objeto_temp.cdg_lancamento == "47"
+      ? "PIX"
+      : preencheEspaco("", 3)
+    }${objeto_temp.reservado_banco}${objeto_temp.reservado_empresa}${preencheEspaco("", 26)
+    }`;
 
   console.log(header);
   console.log(header.length);
@@ -54,15 +52,12 @@ export function geraHeaderLote(objeto) {
     bancos.filter((obj) => obj.cdg == objeto_temp.cdg_banco)[0]
       .indicativo_forma_pagamento;
 
-  const lote = `${geraControle({ ...objeto_temp, cdg_registro: 1 })}${
-    geraServico(objeto_temp)
-  }${preencheEspaco("", 1)}${geraEmpresa(objeto_temp)}${
-    preencheEspaco("", 40) /*Mensagem 1. Mudar futuramente*/
-  }${
-    geraEnderecoEmpresa(objeto_temp)
-  }${objeto_temp.indicativo_forma_pagamento}${preencheEspaco("", 6)}${
-    preencheEspaco("", 10) /*Ocorrencias. mudar futuramente*/
-  }`;
+  const lote = `${geraControle({ ...objeto_temp, cdg_registro: 1 })}${geraServico(objeto_temp)
+    }${preencheEspaco("", 1)}${geraEmpresa(objeto_temp)}${preencheEspaco("", 40) /*Mensagem 1. Mudar futuramente*/
+    }${geraEnderecoEmpresa(objeto_temp)
+    }${objeto_temp.indicativo_forma_pagamento}${preencheEspaco("", 6)}${preencheEspaco("", 10) /*Ocorrencias. mudar futuramente*/
+    }`;
   console.log(objeto_temp);
   console.log(lote);
+  return lote;
 }
