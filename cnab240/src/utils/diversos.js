@@ -1,3 +1,4 @@
+import { viaCEP } from "src/boot/axios";
 export function filtrar(val, update, store, nome) {
   let lista = structuredClone(store);
   if (val === "") {

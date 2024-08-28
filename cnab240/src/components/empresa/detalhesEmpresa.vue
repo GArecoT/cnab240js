@@ -1,0 +1,357 @@
+<template>
+  <q-form
+    class="row content-between items-between"
+    style="height: calc(100vh - 160px)"
+  >
+    <div class="full-width">
+      <div class="titulo">Dados bancários</div>
+      <div class="row col-12 bg-lighter card-1">
+        <q-select
+          :options="lista_bancos"
+          color="primary"
+          dense
+          label="Banco"
+          class="col-sm-3 q-px-xs bg-white"
+          option-label="name"
+          option-value="cdg"
+          emit-value
+          map-options
+          options-dense
+          v-model="empresa.cdg_banco"
+          :rules="[(val) => !!val || 'Obrigatório']"
+          use-input
+          fill-input
+          hide-selected
+          @filter="
+            async (val, update) => {
+              lista_bancos = filtrar(val, update, bancos, 'name');
+            }
+          "
+        />
+        <q-input
+          dense
+          color="primary"
+          input-class="text-black"
+          label="Número Agência"
+          class="col-sm-2 q-px-xs"
+          mask="#####-#"
+          reverse-fill-mask
+          unmasked-value
+          bottom-slots
+          v-model="empresa.num_agencia"
+          :rules="[
+            (val) => val.length <= 6 || '',
+            (val) => !!val || 'Obrigatório',
+          ]"
+        >
+          <template v-slot:counter>
+            <span>{{ calcula_texto(empresa.num_agencia, 6) }}</span>
+          </template>
+        </q-input>
+        <q-input
+          color="primary"
+          input-class="text-black"
+          dense
+          label="Número da Conta"
+          class="col-sm-4 q-px-xs"
+          mask="############-#"
+          reverse-fill-mask
+          unmasked-value
+          v-model="empresa.num_conta"
+          bottom-slots
+          :rules="[
+            (val) => val.length <= 13 || '',
+            (val) => !!val || 'Obrigatório',
+          ]"
+        >
+          <template v-slot:counter>
+            <span>{{ calcula_texto(empresa.num_conta, 13) }}</span>
+          </template>
+        </q-input>
+        <q-input
+          color="primary"
+          input-class="text-black"
+          dense
+          label="Código de convênio com o banco"
+          class="col-sm-3 q-px-xs"
+          v-model="empresa.num_convenio"
+          bottom-slots
+          :rules="[
+            (val) => val.length <= 20 || '',
+            (val) => !!val || 'Obrigatório',
+          ]"
+        >
+          <template v-slot:counter>
+            <span>{{ calcula_texto(empresa.num_convenio, 20) }}</span>
+          </template>
+        </q-input>
+
+        <!-- NOTE: Colocar se tiver a opção -->
+
+        <!-- q-input
+            standout="bg-grey-2 text-black"
+            input-class="text-black"
+            rounded
+            dense
+            label="Número da Conta"
+            class="col-sm-4 q-px-xs"
+            mask="############-#"
+            fill-mask="0"
+            reverse-fill-mask
+            v-model="empresa.num_conta"
+          / -->
+        <q-select
+          :options="listaInscricaoEmpresa"
+          color="primary"
+          dense
+          label="Tipo Doc"
+          class="col-sm-2 q-px-xs bg-white"
+          option-label="name"
+          option-value="cdg"
+          emit-value
+          map-options
+          use-input
+          fill-input
+          hide-selected
+          options-dense
+          v-model="empresa.cdg_documento"
+          :rules="[(val) => !!val || 'Obrigatório']"
+          @filter="
+            async (val, update) => {
+              listaInscricaoEmpresa = filtrar(
+                val,
+                update,
+                inscricaoEmpresa,
+                'name'
+              );
+            }
+          "
+        />
+        <q-input
+          color="primary"
+          input-class="text-black"
+          dense
+          label="Número do Documento"
+          class="col-sm-4 q-px-xs"
+          :mask="
+            empresa.cdg_documento == 1
+              ? '###.###.###-##'
+              : empresa.cdg_documento == 2
+              ? '##.###.###/####-##'
+              : empresa.cdg_documento == 3
+              ? '###.#####.##-#'
+              : '##############'
+          "
+          unmasked-value
+          v-model="empresa.num_doc"
+          bottom-slots
+          :disable="empresa.cdg_documento == 0"
+          :rules="
+            empresa.cdg_documento != '0'
+              ? [
+                  (val) => val.length <= 14 || '',
+                  (val) => !!val || 'Obrigatório',
+                ]
+              : []
+          "
+        >
+          <template v-slot:counter>
+            <span>{{ calcula_texto(empresa.num_doc, 14) }}</span>
+          </template>
+        </q-input>
+        <q-input
+          color="primary"
+          input-class="text-black"
+          dense
+          label="Nome da empresa/pessoa"
+          class="col-sm-6 q-px-xs"
+          v-model="empresa.nome_empresa"
+          @update:model-value="
+            empresa.nome_empresa = empresa.nome_empresa.toUpperCase()
+          "
+          bottom-slots
+          :rules="[
+            (val) => val.length <= 30 || '',
+            (val) => !!val || 'Obrigatório',
+          ]"
+        >
+          <template v-slot:counter>
+            <span>{{ calcula_texto(empresa.nome_empresa, 30) }}</span>
+          </template>
+        </q-input>
+      </div>
+      <div>
+        <div class="titulo">Endereço</div>
+        <div class="row col-12 bg-lighter card-1">
+          <q-input
+            dense
+            color="primary"
+            input-class="text-black"
+            label="CEP"
+            class="col-sm-2 q-px-xs"
+            mask="#####-###"
+            reverse-fill-mask
+            unmasked-value
+            bottom-slots
+            v-model="empresa.cep"
+            debounce="500"
+            @update:model-value="pegaEndereco(empresa.cep)"
+            :rules="[
+              (val) => val.length <= 8 || '',
+              (val) => val.length > 7 || '',
+              (val) => !!val || 'Obrigatório',
+            ]"
+          >
+            <template v-slot:counter>
+              <span>{{ calcula_texto(empresa.cep, 8) }}</span>
+            </template>
+            <template v-slot:append>
+              <q-spinner-hourglass v-if="showLoading" size="sm" />
+            </template>
+          </q-input>
+          <q-input
+            color="primary"
+            input-class="text-black"
+            dense
+            label="Logradouro"
+            class="col-sm-8 q-px-xs"
+            v-model="empresa.logradouro"
+            @update:model-value="
+              empresa.logradouro = empresa.logradouro.toUpperCase()
+            "
+            bottom-slots
+            :rules="[
+              (val) => val.length <= 30 || '',
+              (val) => !!val || 'Obrigatório',
+            ]"
+          >
+            <template v-slot:counter>
+              <span>{{ calcula_texto(empresa.logradouro, 30) }}</span>
+            </template>
+          </q-input>
+          <q-input
+            dense
+            color="primary"
+            input-class="text-black"
+            label="Número"
+            class="col-sm-2 q-px-xs"
+            mask="#####"
+            reverse-fill-mask
+            bottom-slots
+            v-model="empresa.endereco_num"
+            :rules="[
+              (val) => val.length <= 7 || '',
+              (val) => !!val || 'Obrigatório',
+            ]"
+          >
+            <template v-slot:counter>
+              <span>{{ calcula_texto(empresa.endereco_num, 5) }}</span>
+            </template>
+          </q-input>
+          <q-input
+            color="primary"
+            input-class="text-black"
+            dense
+            label="Complemento"
+            class="col-sm-4 q-px-xs"
+            v-model="empresa.complemento"
+            @update:model-value="
+              empresa.complemento = empresa.complemento.toUpperCase()
+            "
+            bottom-slots
+            :rules="[(val) => val.length <= 15 || '']"
+          >
+            <template v-slot:counter>
+              <span>{{ calcula_texto(empresa.complemento, 15) }}</span>
+            </template>
+          </q-input>
+          <q-select
+            :options="lista_estados"
+            color="primary"
+            dense
+            label="Estado"
+            class="col-sm-1 q-px-xs bg-white"
+            options-dense
+            v-model="empresa.estado"
+            :rules="[(val) => !!val || 'Obrigatório']"
+          />
+          <q-input
+            color="primary"
+            input-class="text-black"
+            dense
+            label="Cidade"
+            class="col-sm-4 q-px-xs"
+            v-model="empresa.cidade"
+            @update:model-value="empresa.cidade = empresa.cidade.toUpperCase()"
+            bottom-slots
+            :rules="[(val) => val.length <= 20 || '']"
+          >
+            <template v-slot:counter>
+              <span>{{ calcula_texto(empresa.cidade, 20) }}</span>
+            </template>
+          </q-input>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-end col-12">
+      <q-btn
+        label="Excluir"
+        color="white"
+        unelevated
+        no-caps
+        class="q-px-xl ronded-windows q-mr-md text-black"
+      />
+      <q-btn
+        type="submit"
+        label="Salvar"
+        color="primary"
+        unelevated
+        no-caps
+        class="q-px-xl ronded-windows q-mr-md"
+      />
+    </div>
+  </q-form>
+</template>
+<script setup>
+import { estados } from "src/tipos/cidades_estados";
+import bancos from "src/tipos/bancos.json";
+import { viaCEP } from "src/boot/axios";
+import inscricaoEmpresa from "src/tipos/inscricaoEmpresa";
+import { filtrar, calcula_texto } from "src/utils/diversos";
+import { ref } from "vue";
+const empresa = ref({
+  cdg_banco: "",
+  num_agencia: "",
+  num_conta: "",
+  num_convenio: "",
+  cdg_documento: "",
+  num_doc: "",
+  nome_empresa: "",
+  cdg_operacao: "",
+  cdg_servico: "",
+  cdg_lancamento: "",
+  cep: "",
+  logradouro: "",
+  endereco_num: "",
+  complemento: "",
+  estado: "",
+  cidade: "",
+});
+const showLoading = ref(false);
+const lista_bancos = ref(bancos);
+const lista_estados = ref(estados);
+const listaInscricaoEmpresa = ref(inscricaoEmpresa);
+
+async function pegaEndereco(cep) {
+  if (cep.length == 8) {
+    showLoading.value = true;
+    const response = await viaCEP.get("/ws/" + cep + "/json/");
+    showLoading.value = false;
+    if (response.data) {
+      empresa.value.logradouro = response.data.logradouro.toUpperCase();
+      empresa.value.estado = response.data.uf.toUpperCase();
+      empresa.value.cidade = response.data.localidade.toUpperCase();
+    }
+  }
+}
+</script>
