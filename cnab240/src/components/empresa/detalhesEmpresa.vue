@@ -1,5 +1,6 @@
 <template>
   <q-form
+    @submit="salvar"
     class="row content-between items-between"
     style="height: calc(100vh - 160px)"
   >
@@ -17,7 +18,7 @@
           emit-value
           map-options
           options-dense
-          v-model="empresa.cdg_banco"
+          v-model="lclEmpresa.cdg_banco"
           :rules="[(val) => !!val || 'Obrigatório']"
           use-input
           fill-input
@@ -38,14 +39,14 @@
           reverse-fill-mask
           unmasked-value
           bottom-slots
-          v-model="empresa.num_agencia"
+          v-model="lclEmpresa.num_agencia"
           :rules="[
             (val) => val.length <= 6 || '',
             (val) => !!val || 'Obrigatório',
           ]"
         >
           <template v-slot:counter>
-            <span>{{ calcula_texto(empresa.num_agencia, 6) }}</span>
+            <span>{{ calcula_texto(lclEmpresa.num_agencia, 6) }}</span>
           </template>
         </q-input>
         <q-input
@@ -57,7 +58,7 @@
           mask="############-#"
           reverse-fill-mask
           unmasked-value
-          v-model="empresa.num_conta"
+          v-model="lclEmpresa.num_conta"
           bottom-slots
           :rules="[
             (val) => val.length <= 13 || '',
@@ -65,7 +66,7 @@
           ]"
         >
           <template v-slot:counter>
-            <span>{{ calcula_texto(empresa.num_conta, 13) }}</span>
+            <span>{{ calcula_texto(lclEmpresa.num_conta, 13) }}</span>
           </template>
         </q-input>
         <q-input
@@ -74,7 +75,7 @@
           dense
           label="Código de convênio com o banco"
           class="col-sm-3 q-px-xs"
-          v-model="empresa.num_convenio"
+          v-model="lclEmpresa.num_convenio"
           bottom-slots
           :rules="[
             (val) => val.length <= 20 || '',
@@ -82,7 +83,7 @@
           ]"
         >
           <template v-slot:counter>
-            <span>{{ calcula_texto(empresa.num_convenio, 20) }}</span>
+            <span>{{ calcula_texto(lclEmpresa.num_convenio, 20) }}</span>
           </template>
         </q-input>
 
@@ -114,7 +115,7 @@
           fill-input
           hide-selected
           options-dense
-          v-model="empresa.cdg_documento"
+          v-model="lclEmpresa.cdg_documento"
           :rules="[(val) => !!val || 'Obrigatório']"
           @filter="
             async (val, update) => {
@@ -133,30 +134,12 @@
           dense
           label="Número do Documento"
           class="col-sm-4 q-px-xs"
-          :mask="
-            empresa.cdg_documento == 1
-              ? '###.###.###-##'
-              : empresa.cdg_documento == 2
-              ? '##.###.###/####-##'
-              : empresa.cdg_documento == 3
-              ? '###.#####.##-#'
-              : '##############'
-          "
           unmasked-value
-          v-model="empresa.num_doc"
+          v-model="lclEmpresa.num_doc"
           bottom-slots
-          :disable="empresa.cdg_documento == 0"
-          :rules="
-            empresa.cdg_documento != '0'
-              ? [
-                  (val) => val.length <= 14 || '',
-                  (val) => !!val || 'Obrigatório',
-                ]
-              : []
-          "
         >
           <template v-slot:counter>
-            <span>{{ calcula_texto(empresa.num_doc, 14) }}</span>
+            <span>{{ calcula_texto(lclEmpresa.num_doc, 14) }}</span>
           </template>
         </q-input>
         <q-input
@@ -165,9 +148,9 @@
           dense
           label="Nome da empresa/pessoa"
           class="col-sm-6 q-px-xs"
-          v-model="empresa.nome_empresa"
+          v-model="lclEmpresa.nome_empresa"
           @update:model-value="
-            empresa.nome_empresa = empresa.nome_empresa.toUpperCase()
+            lclEmpresa.nome_lclEmpresa = lclEmpresa.nome_empresa.toUpperCase()
           "
           bottom-slots
           :rules="[
@@ -176,7 +159,7 @@
           ]"
         >
           <template v-slot:counter>
-            <span>{{ calcula_texto(empresa.nome_empresa, 30) }}</span>
+            <span>{{ calcula_texto(lclEmpresa.nome_empresa, 30) }}</span>
           </template>
         </q-input>
       </div>
@@ -193,9 +176,9 @@
             reverse-fill-mask
             unmasked-value
             bottom-slots
-            v-model="empresa.cep"
+            v-model="lclEmpresa.cep"
             debounce="500"
-            @update:model-value="pegaEndereco(empresa.cep)"
+            @update:model-value="pegaEndereco(lclEmpresa.cep)"
             :rules="[
               (val) => val.length <= 8 || '',
               (val) => val.length > 7 || '',
@@ -203,7 +186,7 @@
             ]"
           >
             <template v-slot:counter>
-              <span>{{ calcula_texto(empresa.cep, 8) }}</span>
+              <span>{{ calcula_texto(lclEmpresa.cep, 8) }}</span>
             </template>
             <template v-slot:append>
               <q-spinner-hourglass v-if="showLoading" size="sm" />
@@ -215,9 +198,9 @@
             dense
             label="Logradouro"
             class="col-sm-8 q-px-xs"
-            v-model="empresa.logradouro"
+            v-model="lclEmpresa.logradouro"
             @update:model-value="
-              empresa.logradouro = empresa.logradouro.toUpperCase()
+              lclEmpresa.logradouro = lclEmpresa.logradouro.toUpperCase()
             "
             bottom-slots
             :rules="[
@@ -226,7 +209,7 @@
             ]"
           >
             <template v-slot:counter>
-              <span>{{ calcula_texto(empresa.logradouro, 30) }}</span>
+              <span>{{ calcula_texto(lclEmpresa.logradouro, 30) }}</span>
             </template>
           </q-input>
           <q-input
@@ -238,14 +221,14 @@
             mask="#####"
             reverse-fill-mask
             bottom-slots
-            v-model="empresa.endereco_num"
+            v-model="lclEmpresa.endereco_num"
             :rules="[
               (val) => val.length <= 7 || '',
               (val) => !!val || 'Obrigatório',
             ]"
           >
             <template v-slot:counter>
-              <span>{{ calcula_texto(empresa.endereco_num, 5) }}</span>
+              <span>{{ calcula_texto(lclEmpresa.endereco_num, 5) }}</span>
             </template>
           </q-input>
           <q-input
@@ -254,15 +237,15 @@
             dense
             label="Complemento"
             class="col-sm-4 q-px-xs"
-            v-model="empresa.complemento"
+            v-model="lclEmpresa.complemento"
             @update:model-value="
-              empresa.complemento = empresa.complemento.toUpperCase()
+              lclEmpresa.complemento = lclEmpresa.complemento.toUpperCase()
             "
             bottom-slots
             :rules="[(val) => val.length <= 15 || '']"
           >
             <template v-slot:counter>
-              <span>{{ calcula_texto(empresa.complemento, 15) }}</span>
+              <span>{{ calcula_texto(lclEmpresa.complemento, 15) }}</span>
             </template>
           </q-input>
           <q-select
@@ -272,7 +255,7 @@
             label="Estado"
             class="col-sm-1 q-px-xs bg-white"
             options-dense
-            v-model="empresa.estado"
+            v-model="lclEmpresa.estado"
             :rules="[(val) => !!val || 'Obrigatório']"
           />
           <q-input
@@ -281,13 +264,15 @@
             dense
             label="Cidade"
             class="col-sm-4 q-px-xs"
-            v-model="empresa.cidade"
-            @update:model-value="empresa.cidade = empresa.cidade.toUpperCase()"
+            v-model="lclEmpresa.cidade"
+            @update:model-value="
+              lclEmpresa.cidade = lclEmpresa.cidade.toUpperCase()
+            "
             bottom-slots
             :rules="[(val) => val.length <= 20 || '']"
           >
             <template v-slot:counter>
-              <span>{{ calcula_texto(empresa.cidade, 20) }}</span>
+              <span>{{ calcula_texto(lclEmpresa.cidade, 20) }}</span>
             </template>
           </q-input>
         </div>
@@ -295,6 +280,7 @@
     </div>
     <div class="flex justify-end col-12">
       <q-btn
+        v-if="props.empresa"
         label="Excluir"
         color="white"
         unelevated
@@ -318,8 +304,9 @@ import bancos from "src/tipos/bancos.json";
 import { viaCEP } from "src/boot/axios";
 import inscricaoEmpresa from "src/tipos/inscricaoEmpresa";
 import { filtrar, calcula_texto } from "src/utils/diversos";
-import { ref } from "vue";
-const empresa = ref({
+import { onMounted, ref, toRaw, defineEmits } from "vue";
+import { adicionarEmpresaDB } from "src/database/main";
+const lclEmpresa = ref({
   cdg_banco: "",
   num_agencia: "",
   num_conta: "",
@@ -348,10 +335,25 @@ async function pegaEndereco(cep) {
     const response = await viaCEP.get("/ws/" + cep + "/json/");
     showLoading.value = false;
     if (response.data) {
-      empresa.value.logradouro = response.data.logradouro.toUpperCase();
-      empresa.value.estado = response.data.uf.toUpperCase();
-      empresa.value.cidade = response.data.localidade.toUpperCase();
+      lclEmpresa.value.logradouro = response.data.logradouro.toUpperCase();
+      lclEmpresa.value.estado = response.data.uf.toUpperCase();
+      lclEmpresa.value.cidade = response.data.localidade.toUpperCase();
     }
   }
 }
+async function salvar() {
+  if (lclEmpresa.value.num_doc.length > 0) {
+    lclEmpresa.value.id = lclEmpresa.value.num_doc;
+  } else {
+    lclEmpresa.value.id = crypto.randomUUID();
+  }
+  await adicionarEmpresaDB(structuredClone(toRaw(lclEmpresa.value)));
+  emit("atualizar");
+}
+const props = defineProps(["empresa"]);
+const emit = defineEmits(["atualizar"]);
+onMounted(() => {
+  console.log(props.empresa);
+  if (props.empresa) lclEmpresa.value = props.empresa;
+});
 </script>

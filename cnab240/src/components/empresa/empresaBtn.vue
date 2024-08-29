@@ -14,8 +14,9 @@
             }}</span>
             <span class="sub-conf-empresa q-px-xs">
               {{
-                inscricaoEmpresa.filter((obj) => obj.cdg == props.cdg_doc)[0]
-                  .name
+                inscricaoEmpresa.filter(
+                  (obj) => obj.cdg == props.cdg_documento
+                )[0].name
               }}
             </span>
             <span class="sub-conf-empresa q-px-xs">{{ props.num_doc }}</span>
@@ -44,5 +45,5 @@
 <script setup>
 import bancos from "../../tipos/bancos.json";
 import inscricaoEmpresa from "../../tipos/inscricaoEmpresa.json";
-const props = defineProps(["nome", "cdg_banco", "cdg_doc", "num_doc"]);
+const props = defineProps(["nome", "cdg_banco", "cdg_documento", "num_doc"]);
 </script>

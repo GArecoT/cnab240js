@@ -28,6 +28,14 @@
     </q-layout>
   </div>
 </template>
+<script setup>
+import { onMounted } from "vue";
+import { existeDB, criarDB } from "src/database/main";
+
+onMounted(() => {
+  if (!existeDB("BD")) criarDB();
+});
+</script>
 <style lang="scss">
 .pagina-full {
   min-height: calc(100vh);

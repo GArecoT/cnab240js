@@ -18,6 +18,11 @@
               <q-icon name="sym_r_group" size="sm" /> <span>Empresas</span>
             </div></q-tab
           >
+          <q-tab name="Geral" class="tab-items">
+            <div class="flex items-center q-gutter-x-md">
+              <q-icon name="sym_r_settings" size="sm" /> <span>Geral</span>
+            </div></q-tab
+          >
         </q-tabs>
       </template>
 
@@ -59,16 +64,26 @@
                     unelevated
                     color="primary"
                     no-caps
+                    @click="
+                      empresaSelecionada = null;
+                      tabInterna = 'detalhes';
+                    "
                   />
                 </div>
                 <div>
-                  <EmpresaBtn
-                    nome="Teste"
-                    cdg_banco="237"
-                    cdg_doc="1"
-                    num_doc="06588672101"
-                    @click="tabInterna = 'detalhes'"
-                  />
+                  <div v-for="n in empresaLista" :key="n">
+                    <EmpresaBtn
+                      :nome="n?.nome_empresa"
+                      :cdg_banco="n?.cdg_banco"
+                      :cdg_documento="n?.cdg_documento"
+                      :num_doc="n?.num_doc"
+                      @click="
+                        empresaSelecionada = n;
+                        tabInterna = 'detalhes';
+                      "
+                      class="q-gutter-y-xs"
+                    />
+                  </div>
                 </div>
               </q-tab-panel>
               <q-tab-panel
@@ -86,9 +101,46 @@
                   />
                   <div class="titulo">Detalhes</div>
                 </div>
-                <DetalhesEmpresa />
+                <DetalhesEmpresa
+                  :empresa="empresaSelecionada"
+                  @atualizar="
+                    async () => {
+                      tabInterna = 'geral';
+                      await atualizarListaEmpresas();
+                    }
+                  "
+                />
               </q-tab-panel>
             </q-tab-panels>
+          </q-tab-panel>
+
+          <q-tab-panel
+            name="Geral"
+            class="bg-soft-grey q-pb-sm q-pt-none q-px-sm"
+          >
+            <div class="titulo">Banco de Dados</div>
+            <div class="full-width card-1 bg-lighter">
+              <div class="flex items-center" style="margin-top: -10px">
+                <span>Local</span>
+                <q-toggle
+                  label="Servidor"
+                  v-model="options.servidor"
+                  true-value="true"
+                  false-value="false"
+                />
+
+                <q-input
+                  v-if="options.servidor == 'true'"
+                  dense
+                  color="primary"
+                  input-class="text-black"
+                  label="Endereço do servidor"
+                  class="q-ml-md"
+                  style="width: 500px"
+                  v-model="options.servidor_endereco"
+                />
+              </div>
+            </div>
           </q-tab-panel>
         </q-tab-panels>
       </template>
@@ -96,13 +148,48 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
-
+import { ref, watch, onMounted } from "vue";
 import EmpresaBtn from "src/components/empresa/empresaBtn.vue";
 import DetalhesEmpresa from "src/components/empresa/detalhesEmpresa.vue";
+import { criarDB, getAllEmpresaDB } from "src/database/main";
 const splitterModel = ref(20);
 const tab = ref("Empresas");
 const tabInterna = ref("geral");
+const options = ref({ servidor: false, servidor_endereco: "" });
+const empresaLista = ref([]);
+const empresaSelecionada = ref({});
+
+function salvarConfig() {
+  Object.keys(options.value).forEach((key) => {
+    localStorage.setItem("config/" + key, options.value[key]);
+  });
+}
+function carregaConfig() {
+  Object.keys(options.value).forEach((key) => {
+    if (localStorage.getItem("config/" + key)) {
+      console.log(key, localStorage.getItem("config/" + key));
+      options.value[key] = localStorage.getItem("config/" + key);
+    }
+  });
+}
+
+async function atualizarListaEmpresas() {
+  empresaLista.value = await getAllEmpresaDB();
+}
+
+watch(
+  () => options,
+  () => {
+    salvarConfig();
+  },
+  { deep: true }
+);
+
+onMounted(async () => {
+  carregaConfig();
+  criarDB();
+  atualizarListaEmpresas();
+});
 </script>
 <style lang="scss">
 .tab-items {
