@@ -21,7 +21,6 @@ export function criarDB() {
 
 //Empresas
 export function adicionarEmpresaDB(data) {
-  console.log(data);
   return new Promise(function (resolve, reject) {
     const request = indexedDB.open("BD", 1);
 
@@ -30,10 +29,10 @@ export function adicionarEmpresaDB(data) {
       const transaction = db.transaction("Empresas", "readwrite");
       const objectStore = transaction.objectStore("Empresas");
 
-      const request = objectStore.add(data);
+      const addRequest = objectStore.put(data);
 
-      request.onsuccess = (event) => resolve(event.target.result); // Data added successfully
-      request.onerror = (event) => reject(event);
+      addRequest.onsuccess = (event) => resolve(event.target.result); // Data added successfully
+      addRequest.onerror = (event) => reject(event);
     };
   });
 }

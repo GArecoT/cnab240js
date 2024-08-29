@@ -281,20 +281,29 @@
     <div class="flex justify-end col-12">
       <q-btn
         v-if="props.empresa"
-        label="Excluir"
-        color="white"
-        unelevated
-        no-caps
-        class="q-px-xl ronded-windows q-mr-md text-black"
-      />
-      <q-btn
-        type="submit"
-        label="Salvar"
-        color="primary"
+        :label="confirma_exclusao ? 'Confirmar Exclusão' : 'Excluir'"
+        :color="confirma_exclusao ? 'red-6' : 'white'"
         unelevated
         no-caps
         class="q-px-xl ronded-windows q-mr-md"
+        :class="confirma_exclusao ? 'text-white' : 'text-black'"
+        @click="confirma_exclusao ? excluir : (confirma_exclusao = true)"
+        @blur="confirma_exclusao = false"
       />
+      <transition
+        appear
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+      >
+        <q-btn
+          type="submit"
+          label="Salvar"
+          color="primary"
+          unelevated
+          no-caps
+          class="q-px-xl ronded-windows q-mr-md"
+        />
+      </transition>
     </div>
   </q-form>
 </template>
@@ -305,7 +314,8 @@ import { viaCEP } from "src/boot/axios";
 import inscricaoEmpresa from "src/tipos/inscricaoEmpresa";
 import { filtrar, calcula_texto } from "src/utils/diversos";
 import { onMounted, ref, toRaw, defineEmits } from "vue";
-import { adicionarEmpresaDB } from "src/database/main";
+import { adicionarEmpresaDB, editarEmpresaDB } from "src/database/main";
+import { Notify } from "quasar";
 const lclEmpresa = ref({
   cdg_banco: "",
   num_agencia: "",
@@ -328,6 +338,7 @@ const showLoading = ref(false);
 const lista_bancos = ref(bancos);
 const lista_estados = ref(estados);
 const listaInscricaoEmpresa = ref(inscricaoEmpresa);
+const confirma_exclusao = ref(false);
 
 async function pegaEndereco(cep) {
   if (cep.length == 8) {
@@ -347,9 +358,18 @@ async function salvar() {
   } else {
     lclEmpresa.value.id = crypto.randomUUID();
   }
-  await adicionarEmpresaDB(structuredClone(toRaw(lclEmpresa.value)));
-  emit("atualizar");
+  await adicionarEmpresaDB(structuredClone(toRaw(lclEmpresa.value))).then(
+    () => {
+      Notify.create({
+        type: "positive",
+        message: "Empresa salva com sucesso",
+        position: "top-right",
+      });
+      emit("atualizar");
+    }
+  );
 }
+async function excluir() {}
 const props = defineProps(["empresa"]);
 const emit = defineEmits(["atualizar"]);
 onMounted(() => {
