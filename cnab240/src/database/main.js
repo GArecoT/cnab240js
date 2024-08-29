@@ -20,6 +20,22 @@ export function criarDB() {
 }
 
 //Empresas
+export function removerEmpresaDB(data) {
+  return new Promise(function (resolve, reject) {
+    const request = indexedDB.open("BD", 1);
+
+    request.onsuccess = function (event) {
+      const db = event.target.result;
+      const transaction = db.transaction("Empresas", "readwrite");
+      const objectStore = transaction.objectStore("Empresas");
+
+      const deleteRequest = objectStore.delete(data.id);
+
+      deleteRequest.onsuccess = (event) => resolve(event.target.result); // Data added successfully
+      deleteRequest.onerror = (event) => reject(event);
+    };
+  });
+}
 export function adicionarEmpresaDB(data) {
   return new Promise(function (resolve, reject) {
     const request = indexedDB.open("BD", 1);
