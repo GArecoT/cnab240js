@@ -180,6 +180,7 @@ import { ref, onMounted } from "vue";
 import EmpresaBtn from "src/components/empresa/empresaBtn.vue";
 import DetalhesEmpresa from "src/components/empresa/detalhesEmpresa.vue";
 import { criarDB, getAllEmpresaDB } from "src/database/main";
+import { actEmpresaGetAll } from "src/store/empresa";
 
 const splitterModel = ref(20);
 const tab = ref("Empresas");
@@ -205,7 +206,7 @@ function carregaConfig() {
 }
 
 async function atualizarListaEmpresas() {
-  empresaLista.value = await getAllEmpresaDB();
+  empresaLista.value = await actEmpresaGetAll();
   empresaListaFilter.value = empresaLista.value;
 }
 

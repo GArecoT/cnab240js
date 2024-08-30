@@ -139,6 +139,15 @@
           unmasked-value
           v-model="lclEmpresa.num_doc"
           bottom-slots
+          :disable="lclEmpresa.cdg_documento == 0"
+          :rules="
+            lclEmpresa.cdg_documento != '0'
+              ? [
+                  (val) => val.length <= 14 || '',
+                  (val) => !!val || 'Obrigatório',
+                ]
+              : []
+          "
         >
           <template v-slot:counter>
             <span>{{ calcula_texto(lclEmpresa.num_doc, 14) }}</span>
@@ -337,6 +346,7 @@ import { filtrar, calcula_texto } from "src/utils/diversos";
 import { onMounted, ref, toRaw, defineEmits } from "vue";
 import { adicionarEmpresaDB, removerEmpresaDB } from "src/database/main";
 import { Notify } from "quasar";
+import { actAdicionarEmpresa, actRemoverEmpresa } from "src/store/empresa";
 const lclEmpresa = ref({
   cdg_banco: "",
   num_agencia: "",
@@ -379,26 +389,12 @@ async function salvar() {
   } else {
     lclEmpresa.value.id = crypto.randomUUID();
   }
-  await adicionarEmpresaDB(structuredClone(toRaw(lclEmpresa.value))).then(
-    () => {
-      Notify.create({
-        type: "positive",
-        message: "Empresa salva com sucesso",
-        position: "top-right",
-      });
-      emit("atualizar");
-    }
-  );
+  await actAdicionarEmpresa(structuredClone(toRaw(lclEmpresa.value)));
+  emit("atualizar");
 }
 async function excluir() {
-  await removerEmpresaDB(lclEmpresa.value).then(() => {
-    Notify.create({
-      type: "positive",
-      message: "Empresa excluída com sucesso",
-      position: "top-right",
-    });
-    emit("atualizar");
-  });
+  await actRemoverEmpresa(lclEmpresa.value.id);
+  emit("atualizar");
 }
 const props = defineProps(["empresa"]);
 const emit = defineEmits(["atualizar"]);

@@ -118,6 +118,67 @@
           <div>
             <div class="titulo">Favorecido</div>
             <div class="row col-12 bg-lighter card-1">
+              <q-input
+                color="primary"
+                input-class="text-black"
+                dense
+                label="Num. Documento"
+                class="col-sm-4 q-px-xs"
+                v-model="remessa.num_doc_pagamento"
+                bottom-slots
+                :rules="[
+                  (val) => val.length <= 20 || '',
+                  (val) => !!val || 'Obrigatório',
+                ]"
+              >
+                <template v-slot:counter>
+                  <span>{{
+                    calcula_texto(remessa.num_doc_pagamento, 20)
+                  }}</span>
+                </template>
+              </q-input>
+              <q-input
+                color="primary"
+                input-class="text-black"
+                dense
+                label="Nome do favorecido"
+                class="col-sm-6 q-px-xs"
+                v-model="remessa.nome_favorecido"
+                @update:model-value="
+                  remessa.nome_favorecido =
+                    remessa.nome_favorecido.toUpperCase()
+                "
+                bottom-slots
+                :rules="[
+                  (val) => val.length <= 30 || '',
+                  (val) => !!val || 'Obrigatório',
+                ]"
+              >
+                <template v-slot:counter>
+                  <span>{{ calcula_texto(remessa.nome_favorecido, 30) }}</span>
+                </template>
+              </q-input>
+
+              <q-input
+                color="primary"
+                input-class="text-black"
+                dense
+                mask="##/##/####"
+                unmasked-value
+                label="Data Pagamento"
+                class="col-sm-2 q-px-xs"
+                v-model="remessa.data_pagamento"
+                bottom-slots
+                :rules="[
+                  (val) => val.length <= 8 || '',
+                  (val) => val.length > 7 || '',
+                  (val) => !!val || 'Obrigatório',
+                ]"
+              >
+                <template v-slot:counter>
+                  <span>{{ calcula_texto(remessa.data_pagamento, 8) }}</span>
+                </template>
+              </q-input>
               <q-select
                 :options="lista_camaras"
                 color="primary"
@@ -211,66 +272,7 @@
                   }}</span>
                 </template>
               </q-input>
-              <q-input
-                color="primary"
-                input-class="text-black"
-                dense
-                label="Nome do favorecido"
-                class="col-sm-6 q-px-xs"
-                v-model="remessa.nome_favorecido"
-                @update:model-value="
-                  remessa.nome_favorecido =
-                    remessa.nome_favorecido.toUpperCase()
-                "
-                bottom-slots
-                :rules="[
-                  (val) => val.length <= 30 || '',
-                  (val) => !!val || 'Obrigatório',
-                ]"
-              >
-                <template v-slot:counter>
-                  <span>{{ calcula_texto(remessa.nome_favorecido, 30) }}</span>
-                </template>
-              </q-input>
-              <q-input
-                color="primary"
-                input-class="text-black"
-                dense
-                label="Num. Documento"
-                class="col-sm-4 q-px-xs"
-                v-model="remessa.num_doc_pagamento"
-                bottom-slots
-                :rules="[
-                  (val) => val.length <= 20 || '',
-                  (val) => !!val || 'Obrigatório',
-                ]"
-              >
-                <template v-slot:counter>
-                  <span>{{
-                    calcula_texto(remessa.num_doc_pagamento, 20)
-                  }}</span>
-                </template>
-              </q-input>
-              <q-input
-                color="primary"
-                input-class="text-black"
-                dense
-                mask="##/##/####"
-                unmasked-value
-                label="Data Pagamento"
-                class="col-sm-2 q-px-xs"
-                v-model="remessa.data_pagamento"
-                bottom-slots
-                :rules="[
-                  (val) => val.length <= 8 || '',
-                  (val) => val.length > 7 || '',
-                  (val) => !!val || 'Obrigatório',
-                ]"
-              >
-                <template v-slot:counter>
-                  <span>{{ calcula_texto(remessa.data_pagamento, 8) }}</span>
-                </template>
-              </q-input>
+
               <q-select
                 :options="lista_moedas"
                 color="primary"
@@ -350,6 +352,7 @@ import { filtrar, calcula_texto, exportarTXT } from "src/utils/diversos";
 import { onMounted, ref } from "vue";
 import camaraCentraliza from "src/tipos/camaraCentraliza";
 import { getAllEmpresaDB, getEmpresaDB } from "src/database/main";
+import { actGetEmpresa } from "src/store/empresa";
 
 const empresaLista = ref([]);
 const empresaListaFilter = ref([]);
@@ -382,14 +385,14 @@ const remessa = ref({
   num_doc_pagamento: "",
   data_pagamento: "",
   valor_pagamento: "",
-  cdg_moeda: "BRL"
+  cdg_moeda: "BRL",
 });
 async function atualizarListaEmpresas() {
   empresaLista.value = await getAllEmpresaDB();
   empresaListaFilter.value = empresaLista.value;
 }
 async function pegaEmpresa(key) {
-  await getEmpresaDB(key).then(
+  await actGetEmpresa(key).then(
     (value) => (remessa.value = { ...remessa.value, ...value })
   );
 }

@@ -20,7 +20,7 @@ export function criarDB() {
 }
 
 //Empresas
-export function removerEmpresaDB(data) {
+export function removerEmpresaDB(id) {
   return new Promise(function (resolve, reject) {
     const request = indexedDB.open("BD", 1);
 
@@ -29,7 +29,7 @@ export function removerEmpresaDB(data) {
       const transaction = db.transaction("Empresas", "readwrite");
       const objectStore = transaction.objectStore("Empresas");
 
-      const deleteRequest = objectStore.delete(data.id);
+      const deleteRequest = objectStore.delete(id);
 
       deleteRequest.onsuccess = (event) => resolve(event.target.result); // Data added successfully
       deleteRequest.onerror = (event) => reject(event);
