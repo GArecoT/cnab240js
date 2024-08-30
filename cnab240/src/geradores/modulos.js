@@ -42,9 +42,8 @@ export function geraEmpresa(objeto) {
 
   //Separar código verificador agência e conta
 
-  return `${objeto_temp.cdg_documento}${objeto_temp.num_doc}${objeto_temp.num_convenio}${
-    geraContaCorrente(objeto_temp)
-  }${objeto_temp.nome_empresa}`;
+  return `${objeto_temp.cdg_documento}${objeto_temp.num_doc}${objeto_temp.num_convenio}${geraContaCorrente(objeto_temp)
+    }${objeto_temp.nome_empresa}`;
 }
 
 export function geraFavorecido(objeto) {
@@ -52,12 +51,31 @@ export function geraFavorecido(objeto) {
 
   objeto_temp.nome_favorecido = preencheEspaco(objeto_temp.nome_favorecido);
 
-  return `${objeto_temp.cdg_camara_favorecido}${objeto_temp.cdg_banco_favorecido}${
-    geraContaCorrente({
-      num_agencia: objeto_temp.num_agencia_favorecido,
-      num_conta: objeto_temp.num_conta_favorecido,
-    })
-  }${objeto_temp.nome_favorecido}`;
+  return `${objeto_temp.cdg_camara_favorecido}${objeto_temp.cdg_banco_favorecido}${geraContaCorrente({
+    num_agencia: objeto_temp.num_agencia_favorecido,
+    num_conta: objeto_temp.num_conta_favorecido,
+  })
+    }${objeto_temp.nome_favorecido}`;
+}
+export function geraCredito() {
+  const objeto_temp = structuredClone(objeto);
+
+  objeto_temp.num_doc_empresa = preencheZero(objeto_temp.num_doc_empresa, 20);
+  objeto_temp.valor_pagamento = preencheZero(objeto_temp.valor_pagamento, 13);
+  //NOTE: Manda quantidade da moeda como 0 provisóriamente
+  //NOTE: Manda data real como 0 provisóriamente
+  //NOTE: Manda código do banco como ' ' provisóriamente
+
+  return `${objeto_temp.num_doc_empresa}${objeto_temp.data_pagamento}${objeto_temp.cdg_moeda}${preencheZero("", 15)
+    }${objeto_temp.valor_pagamento}${preencheEspaco("", 20)}${preencheZero("", 8)
+    }${objeto_temp.valor_pagamento}`;
+}
+
+export function geraDetalhePix(num_doc, cdg_banco, cdg_tipo_conta) {
+  const ispb = bancos.filter((obj) => obj.cdg == cdg_banco)[0].ispb;
+
+  return `${preencheZero(num_doc, 14)}${preencheZero(ispb, 8)
+    }${cdg_tipo_conta}`;
 }
 
 export function geraContaCorrente(objeto) {

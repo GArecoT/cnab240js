@@ -2,6 +2,7 @@
   {
     "name": "Bradesco",
     "cdg": "237",
+    "ispb": "60746948",
     "nome_empresa": "BANCO BRADESCO S.A.",
     "densidade": "01600",
     "versao_layout": "089",
@@ -13,6 +14,7 @@
   {
     "name": "Banco do Brasil",
     "cdg": "001",
+    "ispb": "0",
     "nome_empresa": "BCO DO BRASIL S.A.",
     "densidade": "01600",
     "versao_layout": "089",

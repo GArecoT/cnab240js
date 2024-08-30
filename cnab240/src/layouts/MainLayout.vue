@@ -23,7 +23,13 @@
       </q-header>
 
       <q-page-container class="bg-soft-grey">
-        <router-view class="bg-soft-grey" />
+        <transition
+          appear
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+        >
+          <router-view class="bg-soft-grey" />
+        </transition>
       </q-page-container>
     </q-layout>
   </div>

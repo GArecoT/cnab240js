@@ -173,6 +173,32 @@
             <span>{{ calcula_texto(lclEmpresa.nome_empresa, 30) }}</span>
           </template>
         </q-input>
+        <q-input
+          color="primary"
+          input-class="text-black"
+          dense
+          label="N. do último doc. emitido pela empresa"
+          class="col-sm-3 q-px-xs"
+          v-model="lclEmpresa.num_doc_empresa"
+          @update:model-value="
+            lclEmpresa.num_doc_empresa =
+              lclEmpresa.num_doc_empresa.toUpperCase()
+          "
+          bottom-slots
+          :rules="[
+            (val) => val.length <= 20 || '',
+            (val) => !!val || 'Obrigatório',
+          ]"
+        >
+          <q-tooltip
+            >Número do último documento emitido pela empresa. O sistema irá
+            começar a contar a parti desse número. Exemplo: 7001, 7002,
+            7003</q-tooltip
+          >
+          <template v-slot:counter>
+            <span>{{ calcula_texto(lclEmpresa.num_doc_empresa, 20) }}</span>
+          </template>
+        </q-input>
       </div>
       <div>
         <div class="titulo">Endereço</div>
@@ -344,8 +370,6 @@ import { viaCEP } from "src/boot/axios";
 import inscricaoEmpresa from "src/tipos/inscricaoEmpresa";
 import { filtrar, calcula_texto } from "src/utils/diversos";
 import { onMounted, ref, toRaw, defineEmits } from "vue";
-import { adicionarEmpresaDB, removerEmpresaDB } from "src/database/main";
-import { Notify } from "quasar";
 import { actAdicionarEmpresa, actRemoverEmpresa } from "src/store/empresa";
 const lclEmpresa = ref({
   cdg_banco: "",
@@ -364,6 +388,7 @@ const lclEmpresa = ref({
   complemento: "",
   estado: "",
   cidade: "",
+  num_doc_empresa: "",
 });
 const showLoading = ref(false);
 const lista_bancos = ref(bancos);

@@ -320,6 +320,24 @@
                   <span>{{ calcula_texto(remessa.valor_pagamento, 13) }}</span>
                 </template>
               </q-input>
+              <q-select
+                v-if="
+                  remessa.cdg_lancamento == '45' ||
+                  remessa.cdg_lancamento == '47'
+                "
+                :options="conta"
+                color="primary"
+                dense
+                label="Tipo Conta"
+                class="col-sm-2 q-px-xs bg-white"
+                option-label="name"
+                option-value="cdg"
+                emit-value
+                map-options
+                options-dense
+                v-model="empresaSelecionada.cdg_tipo_conta"
+                :rules="[(val) => !!val || 'Obrigatório']"
+              />
             </div>
           </div>
           <div class="col-12">
@@ -351,6 +369,7 @@ import formaLancamento from "src/tipos/formaLancamento";
 import bancos from "src/tipos/bancos";
 import moedas from "src/tipos/moedas";
 import operacao from "src/tipos/operacao";
+import conta from "src/tipos/conta";
 import { geraHeaderArquivo, geraHeaderLote } from "src/geradores/headers";
 import { filtrar, calcula_texto, exportarTXT } from "src/utils/diversos";
 import { onMounted, ref, toRaw } from "vue";
@@ -388,6 +407,7 @@ const remessa = ref({
   cidade: "",
   data_pagamento: "",
   valor_pagamento: "",
+  chavePix: "",
   cdg_moeda: "BRL",
 });
 const favorecido = ref({
@@ -420,6 +440,7 @@ async function pegaFavorecido() {
 }
 
 async function geraRemessa() {
+  // NOTE: Não esquecer de aumentar o num doc empresa para cada header de lote!
   favorecido.value.id = favorecido.value.num_doc_favorecido;
   salvaFavorecido();
   const headerLote = await geraHeaderLote({
