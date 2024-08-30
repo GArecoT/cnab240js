@@ -53,6 +53,17 @@
                     class="bg-white rounded-borders"
                     placeholder="Buscar Empresa"
                     style="max-width: 300px"
+                    v-model="inputFilterEmpresaLista"
+                    debounce="300"
+                    @update:model-value="
+                      () => {
+                        empresaListaFilter = empresaLista.filter((v) =>
+                          v.nome_empresa
+                            .toLowerCase()
+                            .includes(inputFilterEmpresaLista.toLowerCase())
+                        );
+                      }
+                    "
                   >
                     <template v-slot:append>
                       <q-icon name="sym_r_search" color="grey-8" />
@@ -71,7 +82,7 @@
                   />
                 </div>
                 <div>
-                  <div v-for="n in empresaLista" :key="n">
+                  <div v-for="n in empresaListaFilter" :key="n">
                     <EmpresaBtn
                       :nome="n?.nome_empresa"
                       :cdg_banco="n?.cdg_banco"
@@ -145,18 +156,38 @@
         </q-tab-panels>
       </template>
     </q-splitter>
+    <transition
+      appear
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+    >
+      <q-btn
+        v-if="tab != 'Empresas'"
+        type="submit"
+        label="Salvar"
+        color="primary"
+        unelevated
+        no-caps
+        class="q-px-xl ronded-windows q-mr-md"
+        style="position: absolute; right: 10px; bottom: 10px"
+        @click="salvarConfig"
+      />
+    </transition>
   </div>
 </template>
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import EmpresaBtn from "src/components/empresa/empresaBtn.vue";
 import DetalhesEmpresa from "src/components/empresa/detalhesEmpresa.vue";
 import { criarDB, getAllEmpresaDB } from "src/database/main";
+
 const splitterModel = ref(20);
 const tab = ref("Empresas");
 const tabInterna = ref("geral");
 const options = ref({ servidor: false, servidor_endereco: "" });
 const empresaLista = ref([]);
+const empresaListaFilter = ref([]);
+const inputFilterEmpresaLista = ref("");
 const empresaSelecionada = ref({});
 
 function salvarConfig() {
@@ -175,15 +206,8 @@ function carregaConfig() {
 
 async function atualizarListaEmpresas() {
   empresaLista.value = await getAllEmpresaDB();
+  empresaListaFilter.value = empresaLista.value;
 }
-
-watch(
-  () => options,
-  () => {
-    salvarConfig();
-  },
-  { deep: true }
-);
 
 onMounted(async () => {
   carregaConfig();

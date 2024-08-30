@@ -8,6 +8,34 @@
           <div class="titulo">Dados bancários</div>
           <div class="row col-12 bg-lighter card-1">
             <q-select
+              :options="empresaListaFilter"
+              color="primary"
+              dense
+              label="Empresa"
+              class="col-sm-3 q-px-xs bg-white"
+              option-label="nome_empresa"
+              option-value="id"
+              emit-value
+              map-options
+              options-dense
+              v-model="empresaSelecionada.id"
+              :rules="[(val) => !!val || 'Obrigatório']"
+              use-input
+              fill-input
+              hide-selected
+              @update:model-value="pegaEmpresa"
+              @filter="
+                async (val, update) => {
+                  empresaListaFilter = filtrar(
+                    val,
+                    update,
+                    empresaLista,
+                    'nome_empresa'
+                  );
+                }
+              "
+            />
+            <q-select
               :options="listaOperacao"
               color="primary"
               dense
@@ -313,35 +341,26 @@
 </template>
 <script setup>
 import servicos from "src/tipos/servicos";
-import { estados } from "src/tipos/cidades_estados";
 import formaLancamento from "src/tipos/formaLancamento";
-import bancos from "src/tipos/bancos.json";
-import moedas from "src/tipos/moedas.json";
+import bancos from "src/tipos/bancos";
+import moedas from "src/tipos/moedas";
 import operacao from "src/tipos/operacao";
-import inscricaoEmpresa from "src/tipos/inscricaoEmpresa";
 import { geraHeaderArquivo, geraHeaderLote } from "src/geradores/headers";
-import {
-  filtrar,
-  calcula_texto,
-  debounce,
-  exportarTXT,
-  pegaEndereco,
-} from "src/utils/diversos";
+import { filtrar, calcula_texto, exportarTXT } from "src/utils/diversos";
 import { onMounted, ref } from "vue";
-import { viaCEP } from "src/boot/axios";
 import camaraCentraliza from "src/tipos/camaraCentraliza";
+import { getAllEmpresaDB, getEmpresaDB } from "src/database/main";
 
-console.log(bancos);
+const empresaLista = ref([]);
+const empresaListaFilter = ref([]);
+const empresaSelecionada = ref({});
 const lista_bancos = ref(bancos);
 const lista_servicos = ref(servicos);
 const lista_moedas = ref(moedas);
-const lista_estados = ref(estados);
 const lista_camaras = ref(camaraCentraliza);
 const lista_forma_lancamento = ref(formaLancamento);
 const listaOperacao = ref(operacao);
-const listaInscricaoEmpresa = ref(inscricaoEmpresa);
 const header = ref("");
-const showLoading = ref(false);
 const remessa = ref({
   num_agencia: "",
   num_convenio: "",
@@ -363,13 +382,16 @@ const remessa = ref({
   num_doc_pagamento: "",
   data_pagamento: "",
   valor_pagamento: "",
+  cdg_moeda: "BRL"
 });
-
-function handleCep(cep) {
-  const ret = pegaEndereco(cep);
-  remessa.value.logradouro = ret.logradouro;
-  remessa.value.estado = ret.estado;
-  remessa.value.cidade = ret.localidade;
+async function atualizarListaEmpresas() {
+  empresaLista.value = await getAllEmpresaDB();
+  empresaListaFilter.value = empresaLista.value;
+}
+async function pegaEmpresa(key) {
+  await getEmpresaDB(key).then(
+    (value) => (remessa.value = { ...remessa.value, ...value })
+  );
 }
 
 async function geraRemessa() {
@@ -379,7 +401,9 @@ async function geraRemessa() {
   window.open(exportarTXT(headerArquivo + "\n" + headerLote));
 }
 
-onMounted(() => {});
+onMounted(() => {
+  atualizarListaEmpresas();
+});
 </script>
 <style lang="scss">
 .q-field__native {

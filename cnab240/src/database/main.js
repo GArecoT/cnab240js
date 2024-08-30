@@ -69,3 +69,19 @@ export function getAllEmpresaDB() {
     };
   });
 }
+export function getEmpresaDB(key) {
+  return new Promise(function (resolve, reject) {
+    const request = indexedDB.open("BD", 1);
+
+    request.onsuccess = function (event) {
+      const db = event.target.result;
+      const transaction = db.transaction("Empresas", "readwrite");
+      const objectStore = transaction.objectStore("Empresas");
+
+      const request = objectStore.get(key);
+
+      request.onsuccess = (event) => resolve(event.target.result); // Data added successfully
+      request.onerror = (event) => reject(event);
+    };
+  });
+}

@@ -43,7 +43,7 @@
 }
 </style>
 <script setup>
-import bancos from "../../tipos/bancos.json";
-import inscricaoEmpresa from "../../tipos/inscricaoEmpresa.json";
+import bancos from "../../tipos/bancos";
+import inscricaoEmpresa from "../../tipos/inscricaoEmpresa";
 const props = defineProps(["nome", "cdg_banco", "cdg_documento", "num_doc"]);
 </script>

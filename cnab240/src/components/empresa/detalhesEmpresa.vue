@@ -105,6 +105,7 @@
           :options="listaInscricaoEmpresa"
           color="primary"
           dense
+          :readonly="props.empresa ? true : false"
           label="Tipo Doc"
           class="col-sm-2 q-px-xs bg-white"
           option-label="name"
@@ -129,6 +130,7 @@
           "
         />
         <q-input
+          :readonly="props.empresa ? true : false"
           color="primary"
           input-class="text-black"
           dense
@@ -150,7 +152,7 @@
           class="col-sm-6 q-px-xs"
           v-model="lclEmpresa.nome_empresa"
           @update:model-value="
-            lclEmpresa.nome_lclEmpresa = lclEmpresa.nome_empresa.toUpperCase()
+            lclEmpresa.nome_empresa = lclEmpresa.nome_empresa.toUpperCase()
           "
           bottom-slots
           :rules="[
@@ -281,40 +283,59 @@
     <div class="flex justify-end col-12">
       <q-btn
         v-if="props.empresa"
-        :label="confirma_exclusao ? 'Confirmar Exclusão' : 'Excluir'"
-        :color="confirma_exclusao ? 'red-6' : 'white'"
+        label="Excluir"
+        color="white"
+        unelevated
+        no-caps
+        class="q-px-xl ronded-windows q-mr-md text-black"
+        @click="confirma_exclusao = true"
+      />
+      <q-btn
+        type="submit"
+        label="Salvar"
+        color="primary"
         unelevated
         no-caps
         class="q-px-xl ronded-windows q-mr-md"
-        :class="confirma_exclusao ? 'text-white' : 'text-black'"
-        @click="confirma_exclusao ? excluir : (confirma_exclusao = true)"
-        @blur="confirma_exclusao = false"
       />
-      <transition
-        appear
-        enter-active-class="animated fadeIn"
-        leave-active-class="animated fadeOut"
-      >
+    </div>
+  </q-form>
+  <q-dialog v-model="confirma_exclusao" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+        <span class="q-ml-sm">Confirma a exclusão?</span>
+      </q-card-section>
+      <div class="q-pa-sm q-gutter-x-sm">
+        <q-btn
+          label="Cancelar"
+          color="white"
+          unelevated
+          no-caps
+          class="q-px-xl ronded-windows text-black"
+          v-close-popup
+        />
         <q-btn
           type="submit"
-          label="Salvar"
+          label="Excluir"
           color="primary"
           unelevated
           no-caps
-          class="q-px-xl ronded-windows q-mr-md"
+          class="q-px-xl ronded-windows"
+          @click="excluir"
+          v-close-popup
         />
-      </transition>
-    </div>
-  </q-form>
+      </div>
+    </q-card>
+  </q-dialog>
 </template>
 <script setup>
 import { estados } from "src/tipos/cidades_estados";
-import bancos from "src/tipos/bancos.json";
+import bancos from "src/tipos/bancos";
 import { viaCEP } from "src/boot/axios";
 import inscricaoEmpresa from "src/tipos/inscricaoEmpresa";
 import { filtrar, calcula_texto } from "src/utils/diversos";
 import { onMounted, ref, toRaw, defineEmits } from "vue";
-import { adicionarEmpresaDB, editarEmpresaDB } from "src/database/main";
+import { adicionarEmpresaDB, removerEmpresaDB } from "src/database/main";
 import { Notify } from "quasar";
 const lclEmpresa = ref({
   cdg_banco: "",
@@ -369,11 +390,19 @@ async function salvar() {
     }
   );
 }
-async function excluir() {}
+async function excluir() {
+  await removerEmpresaDB(lclEmpresa.value).then(() => {
+    Notify.create({
+      type: "positive",
+      message: "Empresa excluída com sucesso",
+      position: "top-right",
+    });
+    emit("atualizar");
+  });
+}
 const props = defineProps(["empresa"]);
 const emit = defineEmits(["atualizar"]);
 onMounted(() => {
-  console.log(props.empresa);
   if (props.empresa) lclEmpresa.value = props.empresa;
 });
 </script>
