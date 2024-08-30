@@ -19,6 +19,73 @@ export function criarDB() {
   };
 }
 
+//Destinatarios
+export function removerDestinatarioDB(id) {
+  return new Promise(function (resolve, reject) {
+    const request = indexedDB.open("BD", 1);
+
+    request.onsuccess = function (event) {
+      const db = event.target.result;
+      const transaction = db.transaction("Destinatarios", "readwrite");
+      const objectStore = transaction.objectStore("Destinatarios");
+
+      const deleteRequest = objectStore.delete(id);
+
+      deleteRequest.onsuccess = (event) => resolve(event.target.result); // Data added successfully
+      deleteRequest.onerror = (event) => reject(event);
+    };
+  });
+}
+export function adicionarDestinatarioDB(data) {
+  return new Promise(function (resolve, reject) {
+    const request = indexedDB.open("BD", 1);
+
+    request.onsuccess = function (event) {
+      const db = event.target.result;
+      const transaction = db.transaction("Destinatarios", "readwrite");
+      const objectStore = transaction.objectStore("Destinatarios");
+
+      const addRequest = objectStore.put(data);
+
+      addRequest.onsuccess = (event) => resolve(event.target.result); // Data added successfully
+      addRequest.onerror = (event) => reject(event);
+    };
+  });
+}
+
+export function getAllDestinatarioDB() {
+  return new Promise(function (resolve, reject) {
+    const request = indexedDB.open("BD", 1);
+
+    request.onsuccess = function (event) {
+      const db = event.target.result;
+      const transaction = db.transaction("Destinatarios", "readwrite");
+      const objectStore = transaction.objectStore("Destinatarios");
+
+      const request = objectStore.getAll();
+
+      request.onsuccess = (event) => resolve(event.target.result); // Data added successfully
+      request.onerror = (event) => reject(event);
+    };
+  });
+}
+export function getDestinatarioDB(key) {
+  return new Promise(function (resolve, reject) {
+    const request = indexedDB.open("BD", 1);
+
+    request.onsuccess = function (event) {
+      const db = event.target.result;
+      const transaction = db.transaction("Destinatarios", "readwrite");
+      const objectStore = transaction.objectStore("Destinatarios");
+
+      const request = objectStore.get(key);
+
+      request.onsuccess = (event) => resolve(event.target.result); // Data added successfully
+      request.onerror = (event) => reject(event);
+    };
+  });
+}
+
 //Empresas
 export function removerEmpresaDB(id) {
   return new Promise(function (resolve, reject) {

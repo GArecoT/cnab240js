@@ -179,7 +179,7 @@
 import { ref, onMounted } from "vue";
 import EmpresaBtn from "src/components/empresa/empresaBtn.vue";
 import DetalhesEmpresa from "src/components/empresa/detalhesEmpresa.vue";
-import { criarDB, getAllEmpresaDB } from "src/database/main";
+import { criarDB } from "src/database/main";
 import { actEmpresaGetAll } from "src/store/empresa";
 
 const splitterModel = ref(20);
@@ -195,6 +195,7 @@ function salvarConfig() {
   Object.keys(options.value).forEach((key) => {
     localStorage.setItem("config/" + key, options.value[key]);
   });
+  atualizarListaEmpresas();
 }
 function carregaConfig() {
   Object.keys(options.value).forEach((key) => {

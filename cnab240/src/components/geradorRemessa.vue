@@ -124,16 +124,18 @@
                 dense
                 label="Num. Documento"
                 class="col-sm-4 q-px-xs"
-                v-model="remessa.num_doc_pagamento"
+                v-model="favorecido.num_doc_favorecido"
                 bottom-slots
                 :rules="[
                   (val) => val.length <= 20 || '',
                   (val) => !!val || 'Obrigatório',
                 ]"
+                debounce="600"
+                @update:model-value="pegaFavorecido"
               >
                 <template v-slot:counter>
                   <span>{{
-                    calcula_texto(remessa.num_doc_pagamento, 20)
+                    calcula_texto(favorecido.num_doc_favorecido, 20)
                   }}</span>
                 </template>
               </q-input>
@@ -143,10 +145,10 @@
                 dense
                 label="Nome do favorecido"
                 class="col-sm-6 q-px-xs"
-                v-model="remessa.nome_favorecido"
+                v-model="favorecido.nome_favorecido"
                 @update:model-value="
-                  remessa.nome_favorecido =
-                    remessa.nome_favorecido.toUpperCase()
+                  favorecido.nome_favorecido =
+                    favorecido.nome_favorecido.toUpperCase()
                 "
                 bottom-slots
                 :rules="[
@@ -155,7 +157,9 @@
                 ]"
               >
                 <template v-slot:counter>
-                  <span>{{ calcula_texto(remessa.nome_favorecido, 30) }}</span>
+                  <span>{{
+                    calcula_texto(favorecido.nome_favorecido, 30)
+                  }}</span>
                 </template>
               </q-input>
 
@@ -217,7 +221,7 @@
                 emit-value
                 map-options
                 options-dense
-                v-model="remessa.cdg_banco_favorecido"
+                v-model="favorecido.cdg_banco_favorecido"
                 :rules="[(val) => !!val || 'Obrigatório']"
                 use-input
                 fill-input
@@ -238,7 +242,7 @@
                 reverse-fill-mask
                 unmasked-value
                 bottom-slots
-                v-model="remessa.num_agencia_favorecido"
+                v-model="favorecido.num_agencia_favorecido"
                 :rules="[
                   (val) => val.length <= 6 || '',
                   (val) => !!val || 'Obrigatório',
@@ -246,7 +250,7 @@
               >
                 <template v-slot:counter>
                   <span>{{
-                    calcula_texto(remessa.num_agencia_favorecido, 6)
+                    calcula_texto(favorecido.num_agencia_favorecido, 6)
                   }}</span>
                 </template>
               </q-input>
@@ -259,7 +263,7 @@
                 mask="############-#"
                 reverse-fill-mask
                 unmasked-value
-                v-model="remessa.num_conta_favorecido"
+                v-model="favorecido.num_conta_favorecido"
                 bottom-slots
                 :rules="[
                   (val) => val.length <= 13 || '',
@@ -268,7 +272,7 @@
               >
                 <template v-slot:counter>
                   <span>{{
-                    calcula_texto(remessa.num_conta_favorecido, 13)
+                    calcula_texto(favorecido.num_conta_favorecido, 13)
                   }}</span>
                 </template>
               </q-input>
@@ -349,10 +353,14 @@ import moedas from "src/tipos/moedas";
 import operacao from "src/tipos/operacao";
 import { geraHeaderArquivo, geraHeaderLote } from "src/geradores/headers";
 import { filtrar, calcula_texto, exportarTXT } from "src/utils/diversos";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, toRaw } from "vue";
 import camaraCentraliza from "src/tipos/camaraCentraliza";
 import { getAllEmpresaDB, getEmpresaDB } from "src/database/main";
 import { actGetEmpresa } from "src/store/empresa";
+import {
+  actAdicionarDestinatario,
+  actGetDestinatario,
+} from "src/store/destinatario";
 
 const empresaLista = ref([]);
 const empresaListaFilter = ref([]);
@@ -378,14 +386,16 @@ const remessa = ref({
   cep: "",
   complemento: "",
   cidade: "",
+  data_pagamento: "",
+  valor_pagamento: "",
+  cdg_moeda: "BRL",
+});
+const favorecido = ref({
   num_agencia_favorecido: "",
   num_conta_favorecido: "",
   cdg_banco_favorecido: "",
   nome_favorecido: "",
-  num_doc_pagamento: "",
-  data_pagamento: "",
-  valor_pagamento: "",
-  cdg_moeda: "BRL",
+  num_doc_favorecido: "",
 });
 async function atualizarListaEmpresas() {
   empresaLista.value = await getAllEmpresaDB();
@@ -396,10 +406,30 @@ async function pegaEmpresa(key) {
     (value) => (remessa.value = { ...remessa.value, ...value })
   );
 }
+async function salvaFavorecido() {
+  await actAdicionarDestinatario(structuredClone(toRaw(favorecido.value)));
+}
+async function pegaFavorecido() {
+  const response = await actGetDestinatario(
+    favorecido.value.num_doc_favorecido
+  );
+  console.log(response);
+  if (response != undefined) {
+    favorecido.value = response;
+  }
+}
 
 async function geraRemessa() {
-  const headerLote = await geraHeaderLote(remessa.value);
-  const headerArquivo = await geraHeaderArquivo(remessa.value);
+  favorecido.value.id = favorecido.value.num_doc_favorecido;
+  salvaFavorecido();
+  const headerLote = await geraHeaderLote({
+    ...remessa.value,
+    ...favorecido.value,
+  });
+  const headerArquivo = await geraHeaderArquivo({
+    ...remessa.value,
+    ...favorecido.value,
+  });
   console.log(headerLote);
   window.open(exportarTXT(headerArquivo + "\n" + headerLote));
 }
