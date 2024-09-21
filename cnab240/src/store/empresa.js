@@ -8,12 +8,52 @@ import {
 
 export async function actEmpresaGetAll() {
   if (localStorage.getItem("config/servidor") == "false") {
+    console.log(await getAllEmpresaDB());
     return await getAllEmpresaDB();
+  } else {
+    const res = await fetch(
+      localStorage.getItem("config/servidor_endereco") + "api/listarEmpresas",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: localStorage.getItem("config/servidor_login"),
+          senha: localStorage.getItem("config/servidor_senha"),
+        }),
+      },
+    ).then((response) => response.json())
+      .then((data) => {
+        return data;
+      });
+    return res;
   }
 }
 export async function actGetEmpresa(id) {
   if (localStorage.getItem("config/servidor") == "false") {
     return getEmpresaDB(id);
+  } else {
+    const res = await fetch(
+      localStorage.getItem("config/servidor_endereco") + "api/empresa",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: localStorage.getItem("config/servidor_login"),
+          senha: localStorage.getItem("config/servidor_senha"),
+          data: {
+            id: id,
+          },
+        }),
+      },
+    ).then((response) => response.json())
+      .then((data) => {
+        return data;
+      });
+    return res[0];
   }
 }
 export async function actRemoverEmpresa(id) {
@@ -25,6 +65,25 @@ export async function actRemoverEmpresa(id) {
         position: "top-right",
       }),
     );
+  } else {
+    const res = await fetch(
+      localStorage.getItem("config/servidor_endereco") + "api/deletarEmpresa",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: localStorage.getItem("config/servidor_login"),
+          senha: localStorage.getItem("config/servidor_senha"),
+          data: { id: id },
+        }),
+      },
+    ).then((response) => response.json())
+      .then((data) => {
+        return data;
+      });
+    return res;
   }
 }
 export async function actAdicionarEmpresa(data) {
@@ -36,5 +95,24 @@ export async function actAdicionarEmpresa(data) {
         position: "top-right",
       }),
     );
+  } else {
+    const res = await fetch(
+      localStorage.getItem("config/servidor_endereco") + "api/adicionarEmpresa",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: localStorage.getItem("config/servidor_login"),
+          senha: localStorage.getItem("config/servidor_senha"),
+          data: data,
+        }),
+      },
+    ).then((response) => response.json())
+      .then((data) => {
+        return data;
+      });
+    return res;
   }
 }

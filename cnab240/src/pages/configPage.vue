@@ -140,16 +140,39 @@
                   false-value="false"
                 />
 
-                <q-input
-                  v-if="options.servidor == 'true'"
-                  dense
-                  color="primary"
-                  input-class="text-black"
-                  label="Endereço do servidor"
-                  class="q-ml-md"
-                  style="width: 500px"
-                  v-model="options.servidor_endereco"
-                />
+                <div class="q-gutter-y-xs">
+                  <q-input
+                    v-if="options.servidor == 'true'"
+                    dense
+                    color="primary"
+                    input-class="text-black"
+                    label="Endereço do servidor"
+                    class="q-ml-md"
+                    style="width: 500px"
+                    v-model="options.servidor_endereco"
+                  />
+                  <q-input
+                    v-if="options.servidor == 'true'"
+                    dense
+                    color="primary"
+                    input-class="text-black"
+                    label="Login do servidor"
+                    class="q-ml-md"
+                    style="width: 500px"
+                    v-model="options.servidor_login"
+                  />
+                  <q-input
+                    v-if="options.servidor == 'true'"
+                    dense
+                    color="primary"
+                    input-class="text-black"
+                    label="Senha do servidor"
+                    class="q-ml-md"
+                    type="password"
+                    style="width: 500px"
+                    v-model="options.servidor_senha"
+                  />
+                </div>
               </div>
             </div>
           </q-tab-panel>
@@ -185,7 +208,12 @@ import { actEmpresaGetAll } from "src/store/empresa";
 const splitterModel = ref(20);
 const tab = ref("Empresas");
 const tabInterna = ref("geral");
-const options = ref({ servidor: false, servidor_endereco: "" });
+const options = ref({
+  servidor: false,
+  servidor_endereco: "",
+  servidor_login: "",
+  servidor_senha: "",
+});
 const empresaLista = ref([]);
 const empresaListaFilter = ref([]);
 const inputFilterEmpresaLista = ref("");

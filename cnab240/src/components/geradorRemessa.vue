@@ -375,7 +375,7 @@ import { filtrar, calcula_texto, exportarTXT } from "src/utils/diversos";
 import { onMounted, ref, toRaw } from "vue";
 import camaraCentraliza from "src/tipos/camaraCentraliza";
 import { getAllEmpresaDB, getEmpresaDB } from "src/database/main";
-import { actGetEmpresa } from "src/store/empresa";
+import { actEmpresaGetAll, actGetEmpresa } from "src/store/empresa";
 import {
   actAdicionarDestinatario,
   actGetDestinatario,
@@ -418,7 +418,7 @@ const favorecido = ref({
   num_doc_favorecido: "",
 });
 async function atualizarListaEmpresas() {
-  empresaLista.value = await getAllEmpresaDB();
+  empresaLista.value = await actEmpresaGetAll();
   empresaListaFilter.value = empresaLista.value;
 }
 async function pegaEmpresa(key) {
