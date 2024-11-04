@@ -114,6 +114,28 @@
                 }
               "
             />
+            <q-select
+              :options="finalidadeTED"
+              color="primary"
+              dense
+              label="Finalidade"
+              class="col-sm-3 q-px-xs bg-white"
+              option-label="name"
+              option-value="cdg"
+              emit-value
+              map-options
+              options-dense
+              v-model="remessa.cdg_finalidade_doc_ted"
+              :rules="[(val) => !!val || 'Obrigatório']"
+              use-input
+              fill-input
+              hide-selected
+              @filter="
+                async (val, update) => {
+                  finalidadeTED = filtrar(val, update, finalidade_TED, 'name');
+                }
+              "
+            />
           </div>
           <div>
             <div class="titulo">Favorecido</div>
@@ -232,12 +254,34 @@
                   }
                 "
               />
+              <q-select
+                :options="lista_bancos"
+                color="primary"
+                dense
+                label="Banco"
+                class="col-sm-3 q-px-xs bg-white"
+                option-label="name"
+                option-value="cdg"
+                emit-value
+                map-options
+                options-dense
+                v-model="favorecido.cdg_banco_favorecido"
+                :rules="[(val) => !!val || 'Obrigatório']"
+                use-input
+                fill-input
+                hide-selected
+                @filter="
+                  async (val, update) => {
+                    lista_bancos = filtrar(val, update, bancos, 'name');
+                  }
+                "
+              />
               <q-input
                 dense
                 color="primary"
                 input-class="text-black"
                 label="Número Agência"
-                class="col-sm-2 q-px-xs"
+                class="col-sm-3 q-px-xs"
                 mask="#####-#"
                 reverse-fill-mask
                 unmasked-value
@@ -369,6 +413,7 @@ import formaLancamento from "src/tipos/formaLancamento";
 import bancos from "src/tipos/bancos";
 import moedas from "src/tipos/moedas";
 import operacao from "src/tipos/operacao";
+import finalidade_TED from "src/tipos/finalidade_TED";
 import conta from "src/tipos/conta";
 import { geraHeaderArquivo, geraHeaderLote } from "src/geradores/headers";
 import { filtrar, calcula_texto, exportarTXT } from "src/utils/diversos";
@@ -388,6 +433,7 @@ const lista_bancos = ref(bancos);
 const lista_servicos = ref(servicos);
 const lista_moedas = ref(moedas);
 const lista_camaras = ref(camaraCentraliza);
+const finalidadeTED = ref(finalidade_TED);
 const lista_forma_lancamento = ref(formaLancamento);
 const listaOperacao = ref(operacao);
 const header = ref("");
