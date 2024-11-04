@@ -36,6 +36,7 @@
           label="Número Agência"
           class="col-sm-2 q-px-xs"
           mask="#####-#"
+          maxlength="7"
           reverse-fill-mask
           unmasked-value
           bottom-slots
@@ -60,6 +61,7 @@
           unmasked-value
           v-model="lclEmpresa.num_conta"
           bottom-slots
+          maxlength="14"
           :rules="[
             (val) => val.length <= 13 || '',
             (val) => !!val || 'Obrigatório',
@@ -71,6 +73,7 @@
         </q-input>
         <q-input
           color="primary"
+          maxlength="20"
           input-class="text-black"
           dense
           label="Código de convênio com o banco"
@@ -130,6 +133,7 @@
           "
         />
         <q-input
+          maxlength="14"
           :readonly="props.empresa ? true : false"
           color="primary"
           input-class="text-black"
@@ -154,6 +158,7 @@
           </template>
         </q-input>
         <q-input
+          maxlength="30"
           color="primary"
           input-class="text-black"
           dense
@@ -174,6 +179,7 @@
           </template>
         </q-input>
         <q-input
+          maxlength="20"
           color="primary"
           input-class="text-black"
           dense
@@ -205,6 +211,7 @@
         <div class="row col-12 bg-lighter card-1">
           <q-input
             dense
+            maxlength="9"
             color="primary"
             input-class="text-black"
             label="CEP"
@@ -230,6 +237,7 @@
             </template>
           </q-input>
           <q-input
+            maxlength="30"
             color="primary"
             input-class="text-black"
             dense
@@ -251,6 +259,7 @@
           </q-input>
           <q-input
             dense
+            maxlength="5"
             color="primary"
             input-class="text-black"
             label="Número"
@@ -260,7 +269,7 @@
             bottom-slots
             v-model="lclEmpresa.endereco_num"
             :rules="[
-              (val) => val.length <= 7 || '',
+              (val) => val.length <= 5 || '',
               (val) => !!val || 'Obrigatório',
             ]"
           >
@@ -269,6 +278,7 @@
             </template>
           </q-input>
           <q-input
+            maxlength="15"
             color="primary"
             input-class="text-black"
             dense
@@ -296,6 +306,7 @@
             :rules="[(val) => !!val || 'Obrigatório']"
           />
           <q-input
+            maxlength="20"
             color="primary"
             input-class="text-black"
             dense
