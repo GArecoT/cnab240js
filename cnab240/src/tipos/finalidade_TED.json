@@ -1,0 +1,228 @@
+[
+  { "cdg": 1, "name": "Pagamento de Impostos, Tributos e Taxas TED" },
+  { "cdg": 2, "name": "Pagamento à Concessionárias de Serviço Público TED" },
+  { "cdg": 3, "name": "Pagamento de Dividendos TED" },
+  { "cdg": 4, "name": "Pagamento de Salários TED" },
+  { "cdg": 5, "name": "Pagamento de Fornecedores TED" },
+  { "cdg": 6, "name": "Pagamento de Honorários TED" },
+  { "cdg": 7, "name": "Pagamento de Aluguéis e Taxas de Condomínio TED" },
+  { "cdg": 8, "name": "Pagamento de Duplicatas e Títulos TED" },
+  { "cdg": 9, "name": "Pagamento de Mensalidade Escolar TED" },
+  { "cdg": 10, "name": "Crédito em Conta TED" },
+  { "cdg": 11, "name": "Pagamento a Corretoras TED" },
+  { "cdg": 12, "name": "Pagamento de Boleto Bancário em Cartório TED" },
+  {
+    "cdg": 13,
+    "name": "Pagamento de Tarifas pela Prestação de Serviços de Arrecadação de Convênios TED"
+  },
+  {
+    "cdg": 14,
+    "name": "Repasse de Valores Referentes a Títulos Liquidados em Cartórios de Protesto TED"
+  },
+  { "cdg": 15, "name": "Liquidação Financeira de Operadora de Cartão TED" },
+  {
+    "cdg": 16,
+    "name": "Crédito em Conta de Investimento Mantida na IF Destinatária TED"
+  },
+  {
+    "cdg": 17,
+    "name": "Crédito em Conta de Investimento Mantida em Cliente da IF Destinatária TED"
+  },
+  { "cdg": 18, "name": "Operações Seguro Habitacional - SFH TED" },
+  { "cdg": 19, "name": "Operações do FDS - Caixa TED" },
+  { "cdg": 20, "name": "Pagamento de Operações de Crédito TED" },
+  {
+    "cdg": 21,
+    "name": "Crédito para Investimento - Conta de Investimento Mantida na IF Origem TED"
+  },
+  {
+    "cdg": 22,
+    "name": "Crédito para Investimento - Conta de Investimento Mantida em Cliente da IF Origem TED"
+  },
+  { "cdg": 23, "name": "Taxa de Administração TED" },
+  {
+    "cdg": 24,
+    "name": "Crédito para Aplicação em Cliente da IF Destinatária - Conta de Investimento Mantida na TED"
+  },
+  {
+    "cdg": 25,
+    "name": "Crédito para Aplicação em Cliente da IF Destinatária - Conta de Investimento Mantida TED"
+  },
+  {
+    "cdg": 26,
+    "name": "Crédito em CI Mantida na IF Destinatária Proveniente de IF sem Reservas Bancárias TED"
+  },
+  { "cdg": 27, "name": "Pagamento de Acordo / Execução Judicial TED" },
+  { "cdg": 28, "name": "Liquidação de Empréstimos Consignados TED" },
+  { "cdg": 29, "name": "Pagamento de Bolsa Auxílio TED" },
+  { "cdg": 30, "name": "Remuneração à Cooperado TED" },
+  {
+    "cdg": 31,
+    "name": "Pagamento de Prebenda (Remuneração a Padres e Sacerdotes) TED"
+  },
+  { "cdg": 32, "name": "Retirada de Recursos da Conta de Investimento TED" },
+  { "cdg": 33, "name": "Pagamento de Juros sobre Capital Próprio TED" },
+  {
+    "cdg": 34,
+    "name": "Pagamento de Rendimentos ou Amortização s/ Cotas e/ou Debêntures TED"
+  },
+  { "cdg": 35, "name": "Taxa de Serviço TED" },
+  {
+    "cdg": 37,
+    "name": "Pagamento de Juros e/ou Amortização de Títulos Depositados em Garantia nas Câmaras TED"
+  },
+  { "cdg": 38, "name": "Estorno ou Restituição – Diversos TED" },
+  { "cdg": 39, "name": "Pagamento de Vale Transporte TED" },
+  { "cdg": 40, "name": "Simples Nacional TED" },
+  { "cdg": 41, "name": "Repasse de Valores para o FUNDEB TED" },
+  { "cdg": 42, "name": "Repasse de Valores de Convênio Centralizado TED" },
+  { "cdg": 43, "name": "Patrocínio com Incentivo Fiscal TED" },
+  { "cdg": 44, "name": "Doação com Incentivo Fiscal TED" },
+  {
+    "cdg": 45,
+    "name": "Transferência de Conta Corrente de Instituição Não Bancária para sua Conta de TED"
+  },
+  { "cdg": 47, "name": "Pagamento de Rescisão de Contrato de Trabalho TED" },
+  {
+    "cdg": 50,
+    "name": "Reembolso de Despesas com Estruturação de Operações de Renda Fixa e Variável TED"
+  },
+  {
+    "cdg": 97,
+    "name": "Compra de Moeda Estrangeira pelo FSB - Fundo Soberano do Brasil TED"
+  },
+  { "cdg": 100, "name": "Depósito Judicial TED" },
+  { "cdg": 101, "name": "Pensão Alimentícia TED" },
+  {
+    "cdg": 103,
+    "name": "Cessão de Créditos - Liquidação Principal por Aquisição de Créditos ou Direitos TED"
+  },
+  {
+    "cdg": 104,
+    "name": "Cessão de Créditos - Liquidação Principal por Aquisição de Créditos ou Direitos TED"
+  },
+  {
+    "cdg": 107,
+    "name": "Cessão de Créditos - Repasse Contratual de Fluxo de Caixa ou de Recebíveis Pagos, por TED"
+  },
+  {
+    "cdg": 108,
+    "name": "Cessão de Créditos - Repasse Contratual de Fluxo de Caixa ou de Recebíveis Pagos Antecipadamente, por Ordem de Cliente PJ Financeira TED"
+  },
+  { "cdg": 109, "name": "Cessão de Créditos - Ajustes Diversos TED" },
+  {
+    "cdg": 110,
+    "name": "Transferência entre Contas de Mesma Titularidade TED"
+  },
+  {
+    "cdg": 111,
+    "name": "Crédito para Investidor em Cliente da IF Creditada TED"
+  },
+  { "cdg": 112, "name": "Débito de Investidor em Cliente da IF Debitada TED" },
+  { "cdg": 113, "name": "Pagamento de Operações de Crédito por Cliente TED" },
+  {
+    "cdg": 114,
+    "name": "Resgate de Aplicação Financeira de Cliente para Conta de sua Titularidade TED"
+  },
+  {
+    "cdg": 117,
+    "name": "Aplicação Financeira em Nome do Cliente Remetente TED"
+  },
+  {
+    "cdg": 123,
+    "name": "Cessão de Créditos - Liquidação Principal por Recompra de Créditos ou Direitos TED"
+  },
+  {
+    "cdg": 124,
+    "name": "Cessão de Créditos - Liquidação Principal por Recompra de Créditos ou Direitos TED"
+  },
+  {
+    "cdg": 131,
+    "name": "FGCoop - Recolhimento Fundo Garantidor do Cooperativismo de Crédito TED"
+  },
+  { "cdg": 132, "name": "FGCoop - Devolução de Recolhimento a Maior TED" },
+  {
+    "cdg": 139,
+    "name": "Crédito ao Consumidor Decorrente de Programa de Incentivo Fiscal TED"
+  },
+  { "cdg": 200, "name": "Transferência Internacional em Reais TED" },
+  { "cdg": 201, "name": "Ajuste Posição Mercado Futuro TED" },
+  { "cdg": 202, "name": "Repasse de Valores do BNDES TED" },
+  { "cdg": 203, "name": "Liquidação de Compromissos Junto ao BNDES TED" },
+  {
+    "cdg": 204,
+    "name": "Operações de Compra e Venda de Ações - Bolsas de Valores e Mercado de Balcão TED"
+  },
+  {
+    "cdg": 205,
+    "name": "Contratos Referenciados em Ações ou Índices de Ações - Bolsas de Valores TED"
+  },
+  { "cdg": 206, "name": "Operação de Câmbio - Não Interbancária TED" },
+  {
+    "cdg": 207,
+    "name": "Operações no Mercado de Renda Fixa e de Renda Variável com Utilização de TED"
+  },
+  {
+    "cdg": 208,
+    "name": "Operação de Câmbio - Mercado Interbancário - Instituições sem Conta Reservas TED"
+  },
+  {
+    "cdg": 209,
+    "name": "Pagamento de Operações com Identificação de Destinatário Final TED"
+  },
+  { "cdg": 300, "name": "Restituição de Imposto de Renda TED" },
+  { "cdg": 301, "name": "Ordem Bancária do Tesouro – OBT TED" },
+  {
+    "cdg": 302,
+    "name": "Pagamento de Multas ao BACEN por Atrasos de Importação TED"
+  },
+  { "cdg": 303, "name": "Restituição de Tributos – RFB TED" },
+  { "cdg": 400, "name": "TEA - Transferência Eletrônica Agendada TED" },
+  { "cdg": 500, "name": "Restituição de Prêmios de Seguros TED" },
+  { "cdg": 501, "name": "Pagamento de Indenização de Sinistro de Seguro TED" },
+  { "cdg": 502, "name": "Pagamento de Prêmio de Co-Seguro TED" },
+  { "cdg": 503, "name": "Restituição de Prêmio de Co-Seguro TED" },
+  {
+    "cdg": 504,
+    "name": "Pagamento de Indenização de Sinistro de Co-Seguro TED"
+  },
+  { "cdg": 505, "name": "Pagamento de Prêmio de Resseguro TED" },
+  { "cdg": 506, "name": "Restituição de Prêmio de Resseguro TED" },
+  {
+    "cdg": 507,
+    "name": "Pagamento de Indenização de Sinistro de Resseguro TED"
+  },
+  {
+    "cdg": 508,
+    "name": "Restituição de Indenização de Sinistro de Resseguro TED"
+  },
+  { "cdg": 509, "name": "Pagamento de Despesas com Sinistros TED" },
+  { "cdg": 510, "name": "Pagamento de Inspeções/Vistorias Prévias TED" },
+  { "cdg": 511, "name": "Pagamento de Resgate de Título da Capitalização TED" },
+  { "cdg": 512, "name": "Pagamento de Sorteio de Título de Capitalização TED" },
+  {
+    "cdg": 513,
+    "name": "Pagamento de Devolução de Mensalidade de Título de Capitalização TED"
+  },
+  {
+    "cdg": 514,
+    "name": "Restituição de Contribuição de Plano Previdenciário TED"
+  },
+  {
+    "cdg": 515,
+    "name": "Pagamento de Benefício Previdenciário de Pecúlio TED"
+  },
+  { "cdg": 516, "name": "Pagamento de Benefício Previdenciário de Pensão TED" },
+  {
+    "cdg": 517,
+    "name": "Pagamento de Benefício Previdenciário de Aposentadoria TED"
+  },
+  { "cdg": 518, "name": "Pagamento de Resgate Previdenciário TED" },
+  { "cdg": 519, "name": "Pagamento de Comissão de Corretagem TED" },
+  {
+    "cdg": 520,
+    "name": "Pagamento de Transferências/Portabilidade de Reserva de Seguro/Previdência TED"
+  },
+  { "cdg": 10001, "name": "Pagamento via PIX PIX" },
+  { "cdg": 99999, "name": "Outros TED" }
+]

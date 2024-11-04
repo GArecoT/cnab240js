@@ -81,6 +81,7 @@ export function geraDetalheA(objeto) {
         objeto_temp.cdg_banco,
         objeto_temp.cdg_tipo_conta,
       )
-      }`;
+      }${preencheZero("", 2)}${preencheZero(objeto_temp.cdg_finalidade_doc_ted),
+      5}`;
   }
 }
