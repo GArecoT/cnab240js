@@ -365,6 +365,34 @@
                 </template>
               </q-input>
               <q-select
+                :options="lista_aviso_favorecido"
+                color="primary"
+                dense
+                label="Aviso ao Favorecido"
+                class="col-sm-3 q-px-xs bg-white"
+                option-label="name"
+                option-value="cdg"
+                emit-value
+                map-options
+                options-dense
+                v-model="remessa.aviso_favorecido"
+                :rules="[(val) => !!val || 'Obrigatório']"
+                use-input
+                fill-input
+                hide-selected
+                @filter="
+                  async (val, update) => {
+                    lista_aviso_favorecido = filtrar(
+                      val,
+                      update,
+                      aviso_favorecido,
+                      'name'
+                    );
+                  }
+                "
+                @update:model-value="(r) => console.log(r)"
+              />
+              <q-select
                 v-if="
                   remessa.cdg_lancamento == '45' ||
                   remessa.cdg_lancamento == '47'
@@ -379,7 +407,7 @@
                 emit-value
                 map-options
                 options-dense
-                v-model="empresaSelecionada.cdg_tipo_conta"
+                v-model="remessa.cdg_tipo_conta"
                 :rules="[(val) => !!val || 'Obrigatório']"
               />
             </div>
@@ -414,8 +442,13 @@ import bancos from "src/tipos/bancos";
 import moedas from "src/tipos/moedas";
 import operacao from "src/tipos/operacao";
 import finalidade_TED from "src/tipos/finalidade_TED";
+import aviso_favorecido from "src/tipos/aviso_favorecido.json";
 import conta from "src/tipos/conta";
-import { geraHeaderArquivo, geraHeaderLote } from "src/geradores/headers";
+import {
+  geraDetalheA,
+  geraHeaderArquivo,
+  geraHeaderLote,
+} from "src/geradores/headers";
 import { filtrar, calcula_texto, exportarTXT } from "src/utils/diversos";
 import { onMounted, ref, toRaw } from "vue";
 import camaraCentraliza from "src/tipos/camaraCentraliza";
@@ -436,6 +469,7 @@ const lista_camaras = ref(camaraCentraliza);
 const finalidadeTED = ref(finalidade_TED);
 const lista_forma_lancamento = ref(formaLancamento);
 const listaOperacao = ref(operacao);
+const lista_aviso_favorecido = ref(aviso_favorecido);
 const header = ref("");
 const remessa = ref({
   num_agencia: "",
@@ -489,16 +523,25 @@ async function geraRemessa() {
   // NOTE: Não esquecer de aumentar o num doc empresa para cada header de lote!
   favorecido.value.id = favorecido.value.num_doc_favorecido;
   salvaFavorecido();
-  const headerLote = await geraHeaderLote({
+  const headerLote = geraHeaderLote({
     ...remessa.value,
     ...favorecido.value,
   });
-  const headerArquivo = await geraHeaderArquivo({
+  const headerArquivo = geraHeaderArquivo({
     ...remessa.value,
     ...favorecido.value,
   });
+  const retPix = geraPix()
   console.log(headerLote);
-  window.open(exportarTXT(headerArquivo + "\n" + headerLote));
+  window.open(exportarTXT(headerArquivo + "\n" + headerLote + "\n" + retPix));
+}
+
+function geraPix() {
+  const detalheA = geraDetalheA({
+    ...remessa.value,
+    ...favorecido.value,
+  });
+  return detalheA
 }
 
 onMounted(() => {

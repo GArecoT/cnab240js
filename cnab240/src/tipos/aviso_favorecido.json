@@ -1,0 +1,10 @@
+[
+  { "cdg": "0", "name": "Não Emite Aviso" },
+  { "cdg": "2", "name": "Emite Aviso Somente para o Remetente" },
+  { "cdg": "5", "name": "Emite Aviso Somente para o Favorecido" },
+  { "cdg": "6", "name": "Emite Aviso para o Remetente e Favorecido" },
+  {
+    "cdg": "7",
+    "name": "Emite Aviso para o Favorecido e 2 Vias para o Remetente"
+  }
+]
